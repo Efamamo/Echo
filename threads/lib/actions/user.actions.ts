@@ -52,3 +52,12 @@ export async function fetchUser(userId: string) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
 }
+
+export async function fetchUserById(id: string) {
+  try {
+    connectToDB();
+    return await User.findById(id);
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
