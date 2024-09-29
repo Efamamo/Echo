@@ -97,8 +97,41 @@ export async function fetchThreadById(id: string) {
             },
           },
         ],
-      });
+      })
+      .exec();
+
+    return thread;
   } catch (error) {
     throw new Error(`Failed to fetch thread: ${error}`);
+  }
+}
+
+export async function addComment(
+  threadId: string,
+  commentText: string,
+  userId: string,
+  path: string
+) {
+  try {
+    connectToDB();
+    const originalThread = await Thread.findById(threadId);
+    if (!originalThread) {
+      throw new Error('Thread Not Found');
+    }
+
+    const commentThread = new Thread({
+      text: commentText,
+      author: userId,
+      parnetId: threadId,
+    });
+
+    console.log(commentThread);
+
+    const savedCommentThread = await commentThread.save();
+    originalThread.children.push(savedCommentThread._id);
+    await originalThread.save();
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to add comment: ${error.message}`);
   }
 }
