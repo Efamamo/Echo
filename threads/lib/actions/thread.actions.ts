@@ -43,7 +43,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   const skipAmount = (pageNumber - 1) * pageSize;
 
   // Fetch top-level threads (posts) with their authors and children populated
-  const posts = await Thread.find({ parnetId: { $in: [null, undefined] } })
+  const posts = await Thread.find({ parentId: null })
     .sort({ createdAt: 'desc' })
     .skip(skipAmount)
     .limit(pageSize)
@@ -122,7 +122,7 @@ export async function addComment(
     const commentThread = new Thread({
       text: commentText,
       author: userId,
-      parnetId: threadId,
+      parentId: threadId,
     });
 
     const savedCommentThread = await commentThread.save();

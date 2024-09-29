@@ -5,7 +5,7 @@ import User from '../models/user.model';
 import { connectToDB } from '../mongoose';
 import { error } from 'console';
 import Thread from '../models/thread.model';
-import { model } from 'mongoose';
+import { FilterQuery, model, SortOrder } from 'mongoose';
 
 interface Params {
   userId: string;
@@ -75,5 +75,77 @@ export async function fetchUserPosts(id: string) {
     return userThreads;
   } catch (error) {
     throw new Error(`Failed To Fetch User Threads`);
+  }
+}
+
+export async function fetchUsers({
+  userId,
+  pageNumber = 1,
+  pageSize = 20,
+  sortBy = 'desc',
+  searchString = '',
+}: {
+  userId: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: SortOrder;
+  searchString?: string;
+}) {
+  try {
+    connectToDB();
+    const skipAmount = (pageNumber - 1) * pageSize;
+    const regex = new RegExp(searchString, 'i');
+
+    const query: FilterQuery<typeof User> = {
+      id: { $ne: userId },
+    };
+
+    if (searchString.trim() !== '') {
+      query.$or = [
+        { username: { $regex: regex } },
+        { name: { $regex: regex } },
+      ];
+    }
+
+    const sortOptions = { createdAt: sortBy };
+
+    const users = await User.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .exec();
+
+    const totalUsersCount = await User.countDocuments(query);
+
+    const isNext = totalUsersCount > skipAmount + users.length;
+
+    return { users, isNext };
+  } catch (error: any) {
+    throw new Error(`Cant fetch users: ${error.message}`);
+  }
+}
+
+export async function getActivity(userId: string) {
+  try {
+    connectToDB();
+
+    const userThreads = await Thread.find({ author: userId });
+
+    const childThreadIds = userThreads.reduce((acc, userThread) => {
+      return acc.concat(userThread.children);
+    }, []);
+
+    const replies = await Thread.find({
+      _id: { $in: childThreadIds },
+      author: { $ne: userId },
+    }).populate({
+      path: 'author',
+      model: User,
+      select: 'name image _id',
+    });
+
+    return replies;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch activity: ${error.message}`);
   }
 }
