@@ -3,7 +3,8 @@ import React from 'react';
 
 export default function Page() {
   return (
-    <SignUp
-    />
+    <div className="flex h-screen justify-center items-center">
+      <SignUp />
+    </div>
   );
 }
