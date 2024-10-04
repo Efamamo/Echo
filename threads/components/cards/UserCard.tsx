@@ -21,7 +21,7 @@ export default function UserCard({
   const router = useRouter();
   return (
     <article className="user-card">
-      <div className="user-card-avatar">
+      <div className="user-card_avatar">
         <Image
           src={imageUrl}
           alt="logo"
