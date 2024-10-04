@@ -11,7 +11,7 @@ import { IncomingHttpHeaders } from 'http';
 
 import { NextResponse } from 'next/server';
 import {
-  addMem,
+  addMemberToCommunity,
   createCommunity,
   deleteCommunity,
   removeUserFromCommunity,
