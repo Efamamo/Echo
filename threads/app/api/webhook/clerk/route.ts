@@ -20,6 +20,7 @@ import {
 
 // Resource: https://clerk.com/docs/integration/webhooks#supported-events
 // Above document lists the supported events
+
 type EventType =
   | 'organization.created'
   | 'organizationInvitation.created'
@@ -34,6 +35,7 @@ type Event = {
   type: EventType;
 };
 
+console.log('creating org');
 export const POST = async (request: Request) => {
   const payload = await request.json();
   const header = headers();
@@ -60,7 +62,6 @@ export const POST = async (request: Request) => {
   }
 
   const eventType: EventType = evnt?.type!;
-  console.log(eventType);
 
   // Listen organization creation event
   if (eventType === 'organization.created') {
@@ -70,7 +71,6 @@ export const POST = async (request: Request) => {
       evnt?.data ?? {};
 
     try {
-      console.log('creating community');
       // @ts-ignore
       await createCommunity(
         // @ts-ignore
