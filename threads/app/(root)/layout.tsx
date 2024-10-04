@@ -20,7 +20,7 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: 'Chimein',
+  title: 'Chimin',
   description: 'Nest 14 Meta Threads Application',
   icons: {
     icon: '/assets/favicon.ico',

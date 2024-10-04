@@ -2,17 +2,24 @@ import AccountProfile from '@/components/forms/AccountProfile';
 import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { fetchUser } from '@/lib/actions/user.actions';
+import { redirect } from 'next/navigation';
 
 export default async function Onboarding() {
   const user = await currentUser();
 
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+
+  if (userInfo?.onBoarded) redirect('/');
+
   const userData = {
-    id: user?.id || '',
-    objectId: user?.id || '',
-    username: user?.username || '',
-    name: user?.firstName || '',
-    bio: '',
-    image: user?.imageUrl || '',
+    id: user.id,
+    objectId: userInfo?._id,
+    username: userInfo ? userInfo.username : user?.username,
+    name: userInfo ? userInfo?.name : user?.firstName || '',
+    bio: userInfo ? userInfo?.bio : '',
+    image: userInfo ? userInfo?.image : user?.imageUrl,
   };
 
   return (

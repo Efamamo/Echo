@@ -2,7 +2,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import '../globals.css';
 
 export const metadata = {
-  title: 'Threads',
+  title: 'Chimin',
   description: 'Nest 14 Meta Threads Application',
   icons: {
     icon: '/assets/favicon.ico',

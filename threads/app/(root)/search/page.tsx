@@ -2,11 +2,7 @@ import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { fetchUser, fetchUsers } from '@/lib/actions/user.actions';
-import ProfileHeader from '@/components/shared/ProfileHeader';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { profileTabs } from '@/constants';
-import Image from 'next/image';
-import ThreadsTab from '@/components/shared/ThreadsTab';
+
 import UserCard from '@/components/cards/UserCard';
 export default async function Page() {
   const user = await currentUser();
@@ -27,6 +23,7 @@ export default async function Page() {
     pageNumber: 1,
     pageSize: 20,
   });
+
   return (
     <section>
       <h1 className="head-text mb-10">Search</h1>

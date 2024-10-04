@@ -1,3 +1,4 @@
+import { formatDateString } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -95,7 +96,7 @@ export default async function ThreadCard({
                   className="cursor-pointer object-contain"
                 />
               </div>
-              {comments.length > 0 && (
+              {isComment && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
                     {comments.length} replies
@@ -105,6 +106,23 @@ export default async function ThreadCard({
             </div>
           </div>
         </div>
+        {!isComment && community && (
+          <Link
+            href={`/communities/${community.id}`}
+            className="mt-5flex items-center"
+          >
+            <p className="text-subtle- text-gray-1">
+              {formatDateString(createdAt)}- {community.name} Community
+              <Image
+                src={community.image}
+                alt={community.name}
+                width={48}
+                height={48}
+                className="ml-1 rounded-full object-cover"
+              />
+            </p>
+          </Link>
+        )}
       </div>
     </article>
   );

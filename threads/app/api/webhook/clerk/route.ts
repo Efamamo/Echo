@@ -60,6 +60,7 @@ export const POST = async (request: Request) => {
   }
 
   const eventType: EventType = evnt?.type!;
+  console.log(eventType);
 
   // Listen organization creation event
   if (eventType === 'organization.created') {
@@ -69,6 +70,7 @@ export const POST = async (request: Request) => {
       evnt?.data ?? {};
 
     try {
+      console.log('creating community');
       // @ts-ignore
       await createCommunity(
         // @ts-ignore
