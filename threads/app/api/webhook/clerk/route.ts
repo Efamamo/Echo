@@ -20,7 +20,6 @@ import {
 
 // Resource: https://clerk.com/docs/integration/webhooks#supported-events
 // Above document lists the supported events
-
 type EventType =
   | 'organization.created'
   | 'organizationInvitation.created'
@@ -35,10 +34,10 @@ type Event = {
   type: EventType;
 };
 
-console.log('creating org');
 export const POST = async (request: Request) => {
   const payload = await request.json();
   const header = headers();
+  console.log(`payload ${JSON.stringify(payload)}`);
 
   const heads = {
     'svix-id': header.get('svix-id'),

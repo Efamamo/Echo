@@ -17,8 +17,7 @@ export async function createCommunity(
   createdById: string // Change the parameter name to reflect it's an id
 ) {
   try {
-    console.log('community added');
-    await connectToDB();
+    connectToDB();
 
     // Find the user with the provided unique id
     const user = await User.findOne({ id: createdById });
@@ -41,7 +40,6 @@ export async function createCommunity(
     // Update User model
     user.communities.push(createdCommunity._id);
     await user.save();
-    console.log('community created');
 
     return createdCommunity;
   } catch (error) {
