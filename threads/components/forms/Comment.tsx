@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePathname, useRouter } from 'next/navigation';
 import { CommentValidation } from '@/lib/validations/thread';
-import { addComment, createThread } from '@/lib/actions/thread.actions';
+import { addCommentToThread, createThread } from '@/lib/actions/thread.actions';
 import { Input } from '../ui/input';
 import Image from 'next/image';
 // import { updateUser } from '@/lib/actions/user.actions';
@@ -40,7 +40,7 @@ export default function Comment({
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
-    await addComment(
+    await addCommentToThread(
       threadId,
       values.thread,
       JSON.parse(currentUserId),
