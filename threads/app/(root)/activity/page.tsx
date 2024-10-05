@@ -24,15 +24,15 @@ export default async function Page() {
     <section>
       <h1 className="head-text mb-1">Activities</h1>
       <section className="mt-10 flex flex-col gap-5">
-        {activities.length === 0 ? (
+        {activities.replies.length === 0 && activities.likes.length === 0 ? (
           <p className="no-result">No Activites</p>
         ) : (
           <>
-            {activities.map((activity) => (
-              <Link key={activity._id} href={`/thread/${activity.parentId}`}>
+            {activities.replies.map((reply) => (
+              <Link key={reply._id} href={`/thread/${reply.parentId}`}>
                 <article className="activity-card">
                   <Image
-                    src={activity.author.image}
+                    src={reply.author.image}
                     alt="profile picture"
                     width={20}
                     height={20}
@@ -40,9 +40,28 @@ export default async function Page() {
                   />
                   <p className="!text-small-regular text-light-1">
                     <span className="mr-1 text-purple-500">
-                      {activity.author.name}
+                      {reply.author.name}
                     </span>{' '}
                     replied to your thread
+                  </p>
+                </article>
+              </Link>
+            ))}
+            {activities.likes.map((like) => (
+              <Link key={like._id} href={`/thread/${like.thread}`}>
+                <article className="activity-card">
+                  <Image
+                    src={like.user.image}
+                    alt="profile picture"
+                    width={20}
+                    height={20}
+                    className="rounded-full object-cover"
+                  />
+                  <p className="!text-small-regular text-light-1">
+                    <span className="mr-1 text-purple-500">
+                      {like.user.name}
+                    </span>{' '}
+                    liked to your thread
                   </p>
                 </article>
               </Link>
