@@ -16,10 +16,20 @@ import { Textarea } from '../ui/textarea';
 import { useOrganization } from '@clerk/nextjs';
 import { usePathname, useRouter } from 'next/navigation';
 import { ThreadValidation } from '@/lib/validations/thread';
-import { createThread } from '@/lib/actions/thread.actions';
+import { createThread, updateThread } from '@/lib/actions/thread.actions';
 // import { updateUser } from '@/lib/actions/user.actions';
 
-export default function PostThread({ userId }: { userId: string }) {
+export default function PostThread({
+  userId,
+  type,
+  text,
+  threadId,
+}: {
+  userId: string;
+  type: 'Edit' | 'Add';
+  text?: string;
+  threadId?: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const { organization } = useOrganization();
@@ -27,21 +37,29 @@ export default function PostThread({ userId }: { userId: string }) {
   const form = useForm({
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
-      thread: '',
+      thread: text || '',
       accountId: userId,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-    console.log(organization);
-    await createThread({
-      text: values.thread,
-      author: userId,
-      communityId: organization ? organization.id : null,
-      path: pathname,
-    });
-
-    router.push('/');
+    if (type === 'Add') {
+      await createThread({
+        text: values.thread,
+        author: userId,
+        communityId: organization ? organization.id : null,
+        path: pathname,
+      });
+      router.push('/');
+    } else {
+      await updateThread({
+        id: threadId || '',
+        text: values.thread,
+        author: userId,
+        path: pathname,
+      });
+      router.push(`/thread/${threadId}`);
+    }
   };
 
   return (
@@ -59,14 +77,14 @@ export default function PostThread({ userId }: { userId: string }) {
                 Content
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
-                <Textarea rows={15} {...field} />
+                <Textarea rows={15} {...field} value={field.value} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className="bg-primary-500 w-full">
-          Post Thread
+          {type === 'Add' ? 'Post Thread' : 'Edit Thread'}
         </Button>
       </form>
     </Form>

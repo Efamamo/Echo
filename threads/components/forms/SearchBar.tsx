@@ -1,22 +1,26 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
+
+interface SearchProps {
+  searchString: string;
+  setSearchString: (e: any) => void;
+  submit: () => void;
+  placeHolder: string;
+}
 
 export default function SearchBar({
   searchString,
-  setSearch,
+  setSearchString,
   submit,
-}: {
-  searchString: string;
-  setSearch: (st: any) => void;
-  submit: (st: any) => void;
-}) {
+  placeHolder,
+}: SearchProps) {
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    submit();
+  }
   return (
     <form
-      onSubmit={(e: any) => {
-        e.preventDefault();
-        submit(searchString);
-      }}
-      className="flex gap-4 items-center mb-4 p-3 bg-dark-2 rounded-lg"
+      onSubmit={handleSubmit}
+      className="flex gap-4 items-center mb-4 py-3 px-4 bg-dark-2 rounded-xl"
     >
       <Image
         src="/assets/search.svg"
@@ -26,12 +30,12 @@ export default function SearchBar({
       />
       <input
         onChange={(e: any) => {
-          setSearch(e.target.value);
+          setSearchString(e.target.value);
         }}
         type="text"
         name=""
         id=""
-        placeholder="Search users..."
+        placeholder={`Search ${placeHolder}...`}
         className="text-light-1 bg-dark-2 w-full border-none outline-none"
       />
     </form>

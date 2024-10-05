@@ -1,7 +1,6 @@
 import { fetchUserPosts } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
 import ThreadCard from '../cards/ThreadCard';
-import { AnyARecord } from 'dns';
 import { fetchCommunityPosts } from '@/lib/actions/community.actions';
 
 interface Props {
@@ -49,6 +48,7 @@ export default async function ThreadsTab({
           createdAt={thread.createdAt}
           comments={thread.children}
           isComment={true}
+          dis={true}
         />
       ))}
     </section>

@@ -4,7 +4,7 @@ import UserCard from '@/components/cards/UserCard';
 import SearchBar from '@/components/forms/SearchBar';
 
 export default function Page() {
-  const [result, setResult] = useState<any>({ users: [] }); // Initialize with empty users array
+  const [result, setResult] = useState<any>({ users: [] });
   const [searchString, setSearchString] = useState('');
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function Page() {
     fetchUsers();
   }, []);
 
-  async function onsubmit(searchString: string) {
+  async function onsubmit() {
     try {
       const response = await fetch(
         `/api/users?searchString=${encodeURIComponent(searchString)}`,
@@ -62,8 +62,9 @@ export default function Page() {
       <h1 className="head-text mb-10">Search</h1>
       <SearchBar
         searchString={searchString}
-        setSearch={setSearchString}
+        setSearchString={setSearchString}
         submit={onsubmit}
+        placeHolder="users"
       />
       <div className="mt-14 flex flex-col gap-9">
         {/* Add a check for result to avoid accessing 'users' of undefined */}

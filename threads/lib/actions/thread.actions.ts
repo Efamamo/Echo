@@ -63,6 +63,7 @@ export async function createThread({
 }: Params) {
   try {
     await connectToDB();
+
     const communityIdObject = await Community.findOne(
       { id: communityId },
       { _id: 1 }
@@ -89,6 +90,39 @@ export async function createThread({
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Failed to create thread: ${error.message}`);
+  }
+}
+
+interface UParams {
+  text: string;
+  id: string;
+  author: string;
+  path: string;
+}
+
+export async function updateThread({ text, id, author, path }: UParams) {
+  try {
+    await connectToDB();
+
+    const thread = await Thread.findById(id);
+
+    if (thread.author.toHexString() !== author) {
+      throw new Error(
+        `Failed to update thread: thread doesnt belong to the user`
+      );
+    }
+
+    if (!thread) {
+      throw new Error(`Thread not found`);
+    }
+
+    thread.text = text;
+    await thread.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(`Failed to update thread: ${error.message}`);
   }
 }
 

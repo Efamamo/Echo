@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         />
       </div>
 
-      <div className="mt-10 flex flex-col gap-4">
+      <div className="mt-10 flex flex-col gap-6">
         {thread.children.map((child: any) => (
           <ThreadCard
             key={child._id}
@@ -54,6 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             createdAt={child.createdAt}
             comments={child.children}
             isComment={true}
+            dis={true}
           />
         ))}
       </div>
