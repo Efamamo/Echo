@@ -22,10 +22,10 @@ export default async function Page() {
 
   return (
     <section>
-      <h1 className="head-text mb-1">Activities</h1>
+      <h1 className="head-text mb-1">Ripples</h1>
       <section className="mt-10 flex flex-col gap-5">
         {activities.replies.length === 0 && activities.likes.length === 0 ? (
-          <p className="no-result">No Activites</p>
+          <p className="no-result">No Ripples</p>
         ) : (
           <>
             {activities.replies.map((reply) => (

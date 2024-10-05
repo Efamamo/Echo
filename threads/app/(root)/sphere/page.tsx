@@ -8,7 +8,6 @@ export default function Page() {
   const [result, setResult] = useState<any>({ communities: [] });
   const [searchString, setSearchString] = useState('');
 
-  // Fetch communities when the component mounts
   useEffect(() => {
     async function fetchCommunities() {
       try {
@@ -62,16 +61,16 @@ export default function Page() {
 
   return (
     <section>
-      <h1 className="head-text mb-10">Communities</h1>
+      <h1 className="head-text mb-10">Sphere</h1>
       <SearchBar
         searchString={searchString}
         setSearchString={setSearchString}
         submit={onsubmit}
-        placeHolder="communities"
+        placeHolder="sphere"
       />
       <div className="mt-14 flex flex-col gap-9">
         {result.communities.length === 0 ? (
-          <p className="no-result">No Communities</p>
+          <p className="no-result">No Sphere</p>
         ) : (
           <>
             {result.communities.map((community: any) => (

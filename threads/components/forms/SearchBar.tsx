@@ -35,7 +35,7 @@ export default function SearchBar({
         type="text"
         name=""
         id=""
-        placeholder={`Search ${placeHolder}...`}
+        placeholder={`Quest ${placeHolder}...`}
         className="text-light-1 bg-dark-2 w-full border-none outline-none"
       />
     </form>

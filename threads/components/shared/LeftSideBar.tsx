@@ -16,8 +16,7 @@ export default function LeftSideBar() {
             (pathName.includes(link.route) && link.route.length > 1) ||
             pathName === link.route;
           if (link.route === '/profile') link.route = `${link.route}/${userId}`;
-          if (link.route === '/messages')
-            link.route = `${link.route}/${userId}`;
+          if (link.route === '/pulse') link.route = `${link.route}/${userId}`;
 
           return (
             <Link

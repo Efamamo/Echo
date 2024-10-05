@@ -6,18 +6,18 @@ export const sidebarLinks = [
   },
   {
     imgURL: '/assets/messages.svg',
-    route: '/messages',
-    label: 'Messages',
+    route: '/pulse',
+    label: 'Pulse',
   },
   {
     imgURL: '/assets/search.svg',
-    route: '/search',
-    label: 'Search',
+    route: '/quest',
+    label: 'Quest',
   },
   {
     imgURL: '/assets/heart.svg',
-    route: '/activity',
-    label: 'Activities',
+    route: '/ripples',
+    label: 'Ripples',
   },
   {
     imgURL: '/assets/create.svg',
@@ -26,8 +26,8 @@ export const sidebarLinks = [
   },
   {
     imgURL: '/assets/community.svg',
-    route: '/communities',
-    label: 'Communities',
+    route: '/sphere',
+    label: 'Sphere',
   },
   {
     imgURL: '/assets/user.svg',

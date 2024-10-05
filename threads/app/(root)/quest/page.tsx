@@ -59,7 +59,7 @@ export default function Page() {
 
   return (
     <section>
-      <h1 className="head-text mb-10">Search</h1>
+      <h1 className="head-text mb-10">Quest</h1>
       <SearchBar
         searchString={searchString}
         setSearchString={setSearchString}
