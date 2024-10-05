@@ -49,6 +49,7 @@ export default async function ThreadsTab({
           comments={thread.children}
           isComment={true}
           dis={true}
+          likes={thread.likes}
         />
       ))}
     </section>

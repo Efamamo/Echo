@@ -31,6 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
+          likes={thread.likes}
         />
       </div>
       <div className="mt-7 ">
@@ -55,6 +56,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             comments={child.children}
             isComment={true}
             dis={true}
+            likes={child.likes}
           />
         ))}
       </div>

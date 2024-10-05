@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import DeleteThread from '../forms/DeleteThread';
+import LikeThread from '../forms/LikeThread';
 
 interface Props {
   id: string;
@@ -25,6 +26,11 @@ interface Props {
   }[];
   isComment?: boolean;
   dis?: boolean;
+  likes: {
+    user: {
+      id: string;
+    };
+  }[];
 }
 export default function ThreadCard({
   id,
@@ -37,7 +43,10 @@ export default function ThreadCard({
   comments,
   isComment,
   dis,
+  likes,
 }: Props) {
+  const hasLiked = likes.some((like) => like.user.id === currentUserId);
+
   return (
     <article
       className={`relative flex w-full flex-col rounded-xl  ${
@@ -66,12 +75,10 @@ export default function ThreadCard({
             <p className="mt-1 text-small-regular text-light-2">{content}</p>
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
-                <Image
-                  src="/assets/heart-gray.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
+                <LikeThread
+                  hasLiked={hasLiked}
+                  userId={currentUserId}
+                  threadId={id}
                 />
                 <Link href={`/thread/${id}`}>
                   <Image
@@ -98,23 +105,23 @@ export default function ThreadCard({
                   className="cursor-pointer object-contain"
                 />
               </div>
+              <p className="text-light-1 text-subtle-medium">
+                {likes.length === 1 ? '1 like' : `${likes.length} likes`}
+              </p>
               {dis && comments.length > 0 && (
                 <Link className="flex items-center" href={`/thread/${id}`}>
-                  {comments.map((comment, index) => {
-                    console.log(comment.author);
-                    return (
-                      <Image
-                        key={index}
-                        src={comment.author.image}
-                        alt={`user_${index}`}
-                        width={24}
-                        height={24}
-                        className={`${
-                          index !== 0 && '-ml-2'
-                        } rounded-full object-cover`}
-                      />
-                    );
-                  })}
+                  {comments.map((comment, index) => (
+                    <Image
+                      key={index}
+                      src={comment.author.image}
+                      alt={`user_${index}`}
+                      width={24}
+                      height={24}
+                      className={`${
+                        index !== 0 && '-ml-2'
+                      } rounded-full object-cover`}
+                    />
+                  ))}
 
                   <p className="mt-1 ml-2 text-subtle-medium text-gray-1">
                     {comments.length === 1

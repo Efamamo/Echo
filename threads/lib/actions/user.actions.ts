@@ -1,20 +1,19 @@
 'use server';
-
 import { FilterQuery, SortOrder } from 'mongoose';
 import { revalidatePath } from 'next/cache';
-
 import Community from '../models/community.model';
 import Thread from '../models/thread.model';
 import User from '../models/user.model';
-
 import { connectToDB } from '../mongoose';
+import Like from '../models/like.model';
 
+// Fetch Single User by id (from clerk) and populate it with community
 export async function fetchUser(userId: string) {
   try {
     connectToDB();
 
     return await User.findOne({ id: userId }).populate({
-      path: 'communities',
+      path: 'communities', // Name of reference inside the model
       model: Community,
     });
   } catch (error: any) {
@@ -22,7 +21,8 @@ export async function fetchUser(userId: string) {
   }
 }
 
-interface Params {
+// Interface for onboarding user
+interface userParams {
   userId: string;
   username: string;
   name: string;
@@ -31,6 +31,7 @@ interface Params {
   path: string;
 }
 
+// Changes user status if user exists if not creates user and makes him/her onboarded
 export async function updateUser({
   userId,
   bio,
@@ -38,12 +39,14 @@ export async function updateUser({
   path,
   username,
   image,
-}: Params): Promise<void> {
+}: userParams): Promise<void> {
   try {
     connectToDB();
 
     await User.findOneAndUpdate(
+      // Identifier of the user
       { id: userId },
+      // Data to be updated
       {
         username: username.toLowerCase(),
         name,
@@ -51,10 +54,12 @@ export async function updateUser({
         image,
         onBoarded: true,
       },
+      // creates user if it doesnt exists
       { upsert: true }
     );
 
     if (path === '/profile/edit') {
+      // the next time someone accesses '/profile/edit', the page is rebuilt with the latest data from the backend (or database).
       revalidatePath(path);
     }
   } catch (error: any) {
@@ -62,19 +67,26 @@ export async function updateUser({
   }
 }
 
+// Fetches all user posts
 export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
-    // Find all threads authored by the user with the given userId
+    // Find all top level threads authored by the user with the given userId
     const threads = await User.findOne({ id: userId }).populate({
       path: 'threads',
       model: Thread,
+      // Filter threads where parentId is null or undefined
+      match: { parentId: { $in: [null, undefined] } },
+
       populate: [
         {
           path: 'community',
           model: Community,
-          select: 'name id image _id', // Select the "name" and "_id" fields from the "Community" model
+          select: 'name id image _id', // Select the "name", "id", "image" and "_id" fields from the "Community" model
+        },
+        {
+          path: 'author',
         },
         {
           path: 'children',
@@ -83,6 +95,14 @@ export async function fetchUserPosts(userId: string) {
             path: 'author',
             model: User,
             select: 'name image id', // Select the "name" and "_id" fields from the "User" model
+          },
+        },
+        {
+          path: 'likes',
+          model: Like,
+          populate: {
+            path: 'user',
+            model: User,
           },
         },
       ],
@@ -153,6 +173,7 @@ export async function fetchUsers({
   }
 }
 
+// Get all activities related to user post
 export async function getActivity(userId: string) {
   try {
     connectToDB();

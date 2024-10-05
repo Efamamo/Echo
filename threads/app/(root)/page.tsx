@@ -33,6 +33,7 @@ export default async function Home() {
                   createdAt={post.createdAt}
                   comments={post.children}
                   dis={true}
+                  likes={post.likes}
                 />
               );
             })}
