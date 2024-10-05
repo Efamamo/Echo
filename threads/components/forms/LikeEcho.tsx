@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { react } from '@/lib/actions/like.actions';
 
-export default function LikeThread({
+export default function LikeEcho({
   threadId,
   userId,
   hasLiked,

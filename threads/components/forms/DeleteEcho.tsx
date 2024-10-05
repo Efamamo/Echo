@@ -6,7 +6,7 @@ import { deleteThread } from '@/lib/actions/thread.actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function DeleteThread({ threadId }: { threadId: string }) {
+export default function DeleteEcho({ threadId }: { threadId: string }) {
   const pathname = usePathname();
   const router = useRouter();
 

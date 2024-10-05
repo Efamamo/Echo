@@ -2,7 +2,7 @@ import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { fetchUser } from '@/lib/actions/user.actions';
-import PostThread from '@/components/forms/PostThread';
+import PostThread from '@/components/forms/PostEcho';
 import { fetchThreadById } from '@/lib/actions/thread.actions';
 export default async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();

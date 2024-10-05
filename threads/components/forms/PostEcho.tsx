@@ -19,7 +19,7 @@ import { ThreadValidation } from '@/lib/validations/thread';
 import { createThread, updateThread } from '@/lib/actions/thread.actions';
 // import { updateUser } from '@/lib/actions/user.actions';
 
-export default function PostThread({
+export default function PostEcho({
   userId,
   type,
   text,
@@ -58,7 +58,7 @@ export default function PostThread({
         author: userId,
         path: pathname,
       });
-      router.push(`/thread/${threadId}`);
+      router.push(`/echos/${threadId}`);
     }
   };
 
@@ -84,7 +84,7 @@ export default function PostThread({
           )}
         />
         <Button type="submit" className="bg-primary-500 w-full">
-          {type === 'Add' ? 'Post Thread' : 'Edit Thread'}
+          {type === 'Add' ? 'Post Echo' : 'Edit Echo'}
         </Button>
       </form>
     </Form>

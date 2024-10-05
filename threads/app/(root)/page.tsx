@@ -1,4 +1,4 @@
-import ThreadCard from '@/components/cards/ThreadCard';
+import EchoCard from '@/components/cards/EchoCard';
 import { fetchPosts } from '@/lib/actions/thread.actions';
 import { fetchUser } from '@/lib/actions/user.actions';
 import { currentUser } from '@clerk/nextjs/server';
@@ -22,7 +22,7 @@ export default async function Home() {
           <>
             {result.posts.map((post) => {
               return (
-                <ThreadCard
+                <EchoCard
                   key={post._id}
                   id={post._id}
                   currentUserId={user?.id || ''}

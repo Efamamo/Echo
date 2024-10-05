@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import DeleteThread from '../forms/DeleteThread';
-import LikeThread from '../forms/LikeThread';
+import LikeEcho from '../forms/LikeEcho';
+import DeleteEcho from '../forms/DeleteEcho';
 
 interface Props {
   id: string;
@@ -32,7 +32,7 @@ interface Props {
     };
   }[];
 }
-export default function ThreadCard({
+export default function EchoCard({
   id,
   currentUserId,
   parentId,
@@ -75,12 +75,12 @@ export default function ThreadCard({
             <p className="mt-1 text-small-regular text-light-2">{content}</p>
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
-                <LikeThread
+                <LikeEcho
                   hasLiked={hasLiked}
                   userId={currentUserId}
                   threadId={id}
                 />
-                <Link href={`/thread/${id}`}>
+                <Link href={`/echos/${id}`}>
                   <Image
                     src="/assets/reply.svg"
                     alt="reply"
@@ -109,7 +109,7 @@ export default function ThreadCard({
                 {likes.length === 1 ? '1 like' : `${likes.length} likes`}
               </p>
               {dis && comments.length > 0 && (
-                <Link className="flex items-center" href={`/thread/${id}`}>
+                <Link className="flex items-center" href={`/echos/${id}`}>
                   {comments.map((comment, index) => (
                     <Image
                       key={index}
@@ -136,11 +136,11 @@ export default function ThreadCard({
 
         {author.id === currentUserId && (
           <div className="flex  gap-3 absolute top-2 right-2 cursor-pointer">
-            <Link href={`/thread/edit/${id}`}>
+            <Link href={`/echos/edit/${id}`}>
               {' '}
               <Image src="/assets/edit.svg" alt="edit" width={18} height={24} />
             </Link>
-            <DeleteThread threadId={id} />
+            <DeleteEcho threadId={id} />
           </div>
         )}
       </div>

@@ -42,7 +42,7 @@ export default async function Page() {
                     <span className="mr-1 text-purple-500">
                       {reply.author.name}
                     </span>{' '}
-                    replied to your thread
+                    replied to your echo
                   </p>
                 </article>
               </Link>
@@ -61,7 +61,7 @@ export default async function Page() {
                     <span className="mr-1 text-purple-500">
                       {like.user.name}
                     </span>{' '}
-                    liked to your thread
+                    liked to your echo
                   </p>
                 </article>
               </Link>

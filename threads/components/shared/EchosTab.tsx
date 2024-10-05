@@ -1,6 +1,6 @@
 import { fetchUserPosts } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
-import ThreadCard from '../cards/ThreadCard';
+import ThreadCard from '../cards/EchoCard';
 import { fetchCommunityPosts } from '@/lib/actions/community.actions';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
   accountId: string;
   accountType: string;
 }
-export default async function ThreadsTab({
+export default async function EchosTab({
   currentUserId,
   accountId,
   accountType,
