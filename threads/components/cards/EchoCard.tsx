@@ -31,6 +31,8 @@ interface Props {
       id: string;
     };
   }[];
+  navigate?: boolean;
+  reply?: string;
 }
 export default function EchoCard({
   id,
@@ -44,6 +46,8 @@ export default function EchoCard({
   isComment,
   dis,
   likes,
+  navigate,
+  reply,
 }: Props) {
   const hasLiked = likes.some((like) => like.user.id === currentUserId);
 
@@ -80,7 +84,7 @@ export default function EchoCard({
                   userId={currentUserId}
                   threadId={id}
                 />
-                <Link href={`/echos/${id}`}>
+                <Link href={reply ? `/echos/${reply}` : `/echos/${id}`}>
                   <Image
                     src="/assets/reply.svg"
                     alt="reply"
@@ -109,14 +113,17 @@ export default function EchoCard({
                 {likes.length === 1 ? '1 like' : `${likes.length} likes`}
               </p>
               {dis && comments.length > 0 && (
-                <Link className="flex items-center" href={`/echos/${id}`}>
+                <Link
+                  className="flex items-center"
+                  href={reply ? `/echos/${reply}` : `/echos/${id}`}
+                >
                   {comments.map((comment, index) => (
                     <Image
                       key={index}
                       src={comment.author.image}
                       alt={`user_${index}`}
-                      width={24}
-                      height={24}
+                      width={20}
+                      height={20}
                       className={`${
                         index !== 0 && '-ml-2'
                       } rounded-full object-cover`}
@@ -140,7 +147,7 @@ export default function EchoCard({
               {' '}
               <Image src="/assets/edit.svg" alt="edit" width={18} height={24} />
             </Link>
-            <DeleteEcho threadId={id} />
+            <DeleteEcho threadId={id} navigate={navigate} />
           </div>
         )}
       </div>

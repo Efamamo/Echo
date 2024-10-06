@@ -6,7 +6,13 @@ import { deleteThread } from '@/lib/actions/thread.actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function DeleteEcho({ threadId }: { threadId: string }) {
+export default function DeleteEcho({
+  threadId,
+  navigate,
+}: {
+  threadId: string;
+  navigate: boolean | undefined;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -14,7 +20,9 @@ export default function DeleteEcho({ threadId }: { threadId: string }) {
 
   const onSubmit = async () => {
     await deleteThread(threadId, pathname);
-    router.push('/');
+    if (navigate) {
+      router.push('/');
+    }
   };
 
   return (

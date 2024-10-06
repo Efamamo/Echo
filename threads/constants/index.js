@@ -6,8 +6,8 @@ export const sidebarLinks = [
   },
   {
     imgURL: '/assets/messages.svg',
-    route: '/pulse',
-    label: 'Pulse',
+    route: '/whispers',
+    label: 'Whispers',
   },
   {
     imgURL: '/assets/search.svg',
@@ -26,8 +26,8 @@ export const sidebarLinks = [
   },
   {
     imgURL: '/assets/community.svg',
-    route: '/sphere',
-    label: 'Sphere',
+    route: '/chorus',
+    label: 'Chorus',
   },
   {
     imgURL: '/assets/user.svg',

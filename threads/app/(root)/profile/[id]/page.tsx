@@ -1,7 +1,7 @@
 import React from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { fetchUser } from '@/lib/actions/user.actions';
+import { fetchUser, fetchUserComments } from '@/lib/actions/user.actions';
 import ProfileHeader from '@/components/shared/ProfileHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { profileTabs } from '@/constants';
@@ -19,6 +19,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     redirect('/onboarding');
   }
 
+  const userReplies = await fetchUserComments(params.id);
+
   return (
     <section>
       <ProfileHeader
@@ -31,7 +33,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       />
 
       <div className="mt-9">
-        <Tabs defaultValue="threads" className="w-full">
+        <Tabs defaultValue="echos" className="w-full">
           <TabsList className="tab">
             {profileTabs.map((tab) => (
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
@@ -48,6 +50,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                     {userInfo?.threads?.length}
                   </p>
                 )}
+                {tab.label === 'Replies' && (
+                  <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
+                    {userReplies.length}
+                  </p>
+                )}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -61,6 +68,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 currentUserId={user.id}
                 accountId={userInfo.id}
                 accountType="User"
+                fetch={tab.value}
               />
             </TabsContent>
           ))}

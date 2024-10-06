@@ -61,16 +61,16 @@ export default function Page() {
 
   return (
     <section>
-      <h1 className="head-text mb-10">Sphere</h1>
+      <h1 className="head-text mb-10">Chorus</h1>
       <SearchBar
         searchString={searchString}
         setSearchString={setSearchString}
         submit={onsubmit}
-        placeHolder="sphere"
+        placeHolder="chorus"
       />
       <div className="mt-14 flex flex-col gap-9">
         {result.communities.length === 0 ? (
-          <p className="no-result">No Sphere</p>
+          <p className="no-result">No Chorus</p>
         ) : (
           <>
             {result.communities.map((community: any) => (

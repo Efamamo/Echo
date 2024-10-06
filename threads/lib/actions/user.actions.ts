@@ -70,46 +70,90 @@ export async function updateUser({
 // Fetches all user posts
 export async function fetchUserPosts(userId: string) {
   try {
-    connectToDB();
+    await connectToDB(); // Ensure the database connection is established.
+    const user = await User.findOne({ id: userId });
 
-    // Find all top level threads authored by the user with the given userId
-    const threads = await User.findOne({ id: userId }).populate({
-      path: 'threads',
-      model: Thread,
-      // Filter threads where parentId is null or undefined
-      match: { parentId: { $in: [null, undefined] } },
-
-      populate: [
-        {
-          path: 'community',
-          model: Community,
-          select: 'name id image _id', // Select the "name", "id", "image" and "_id" fields from the "Community" model
-        },
-        {
+    // Find threads (comments) authored by the user, where parentId is not null
+    const threads = await Thread.find({
+      author: user._id,
+      parentId: { $in: [null, undefined] },
+    })
+      .populate({
+        path: 'community',
+        model: Community,
+        select: 'name id image _id', // Select specific fields from the "Community" model
+      })
+      .populate({
+        path: 'author', // Populate the author of the thread
+        select: 'name image id', // Select specific fields from the "User" model
+      })
+      .populate({
+        path: 'children', // Populate child threads (replies)
+        model: Thread,
+        populate: {
           path: 'author',
+          model: User,
+          select: 'name image id', // Select specific fields from the "User" model for replies
         },
-        {
-          path: 'children',
-          model: Thread,
-          populate: {
-            path: 'author',
-            model: User,
-            select: 'name image id', // Select the "name" and "_id" fields from the "User" model
-          },
+      })
+      .populate({
+        path: 'likes', // Populate the likes associated with the thread
+        model: Like,
+        populate: {
+          path: 'user',
+          model: User, // Populate the users who liked the thread
+          select: 'name id', // Select specific fields from the "User" model
         },
-        {
-          path: 'likes',
-          model: Like,
-          populate: {
-            path: 'user',
-            model: User,
-          },
-        },
-      ],
-    });
+      });
+
     return threads;
   } catch (error) {
-    console.error('Error fetching user threads:', error);
+    console.error('Error fetching user comments:', error);
+    throw error;
+  }
+}
+
+export async function fetchUserComments(userId: string) {
+  try {
+    await connectToDB(); // Ensure the database connection is established.
+    const user = await User.findOne({ id: userId });
+
+    // Find threads (comments) authored by the user, where parentId is not null
+    const threads = await Thread.find({
+      author: user._id,
+      parentId: { $ne: null, $exists: true },
+    })
+      .populate({
+        path: 'community',
+        model: Community,
+        select: 'name id image _id', // Select specific fields from the "Community" model
+      })
+      .populate({
+        path: 'author', // Populate the author of the thread
+        select: 'name image id', // Select specific fields from the "User" model
+      })
+      .populate({
+        path: 'children', // Populate child threads (replies)
+        model: Thread,
+        populate: {
+          path: 'author',
+          model: User,
+          select: 'name image id', // Select specific fields from the "User" model for replies
+        },
+      })
+      .populate({
+        path: 'likes', // Populate the likes associated with the thread
+        model: Like,
+        populate: {
+          path: 'user',
+          model: User, // Populate the users who liked the thread
+          select: 'name id', // Select specific fields from the "User" model
+        },
+      });
+
+    return threads;
+  } catch (error) {
+    console.error('Error fetching user comments:', error);
     throw error;
   }
 }

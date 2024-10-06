@@ -32,6 +32,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           createdAt={thread.createdAt}
           comments={thread.children}
           likes={thread.likes}
+          navigate={true}
         />
       </div>
       <div className="mt-7 ">
