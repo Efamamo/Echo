@@ -26,7 +26,8 @@ export default async function Page() {
       <section className="mt-10 flex flex-col gap-5">
         {activities.replies.length === 0 &&
         activities.likes.length === 0 &&
-        activities.reposts.length === 0 ? (
+        activities.reposts.length === 0 &&
+        activities.followers.length === 0 ? (
           <p className="no-result">No Ripples</p>
         ) : (
           <>
@@ -83,6 +84,26 @@ export default async function Page() {
                       {repost.author.name}
                     </span>{' '}
                     reposted to your echo
+                  </p>
+                </article>
+              </Link>
+            ))}
+
+            {activities.followers.map((follower: any) => (
+              <Link key={follower._id} href={`/profile/${follower.id}`}>
+                <article className="activity-card">
+                  <Image
+                    src={follower.image}
+                    alt="profile picture"
+                    width={20}
+                    height={20}
+                    className="rounded-full object-cover"
+                  />
+                  <p className="!text-small-regular text-light-1">
+                    <span className="mr-1 text-purple-500">
+                      {follower.name}
+                    </span>{' '}
+                    started following you
                   </p>
                 </article>
               </Link>

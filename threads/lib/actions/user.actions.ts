@@ -222,6 +222,10 @@ export async function getActivity(userId: string) {
   try {
     connectToDB();
 
+    const user = await User.findById(userId).populate('followers');
+
+    const followers = user.followers;
+
     // Find all threads created by the user
     const userThreads = await Thread.find({ author: userId });
 
@@ -265,7 +269,7 @@ export async function getActivity(userId: string) {
       select: 'name image _id',
     });
 
-    return { replies, likes, reposts };
+    return { replies, likes, reposts, followers };
   } catch (error) {
     console.error('Error fetching replies: ', error);
     throw error;

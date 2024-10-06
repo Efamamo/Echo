@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const userInfo = await fetchUser(params.id);
 
   if (!userInfo?.onBoarded) {
-    redirect('/onboarding');
+    redirect('/');
   }
 
   const current = await fetchUser(user.id);
