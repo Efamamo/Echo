@@ -9,51 +9,60 @@ import Thread from '../models/thread.model';
 import Community from '../models/community.model';
 import Like from '../models/like.model';
 
-export async function fetchPosts(pageNumber = 1, pageSize = 20) {
-  connectToDB();
+export async function fetchPosts(
+  pageNumber = 1,
+  pageSize = 20,
+  userId: string
+) {
+  await connectToDB(); // Ensure DB connection
 
-  // Calculate the number of posts to skip based on the page number and page size.
   const skipAmount = (pageNumber - 1) * pageSize;
 
-  // Create a query to fetch the posts that have no parent (top-level threads) (a thread that is not a comment/reply).
-  const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
+  // Fetch all posts where the parent is null (top-level posts)
+  const postsQuery = Thread.find({
+    parentId: { $in: [null, undefined] },
+  })
     .sort({ createdAt: 'desc' })
     .skip(skipAmount)
     .limit(pageSize)
     .populate({
       path: 'author',
-      model: User,
-    })
-    .populate({
-      path: 'community',
-      model: Community,
-    })
-    .populate({
-      path: 'children', // Populate the children field
       populate: {
-        path: 'author', // Populate the author field within children
-        model: User,
-        select: '_id name  image', // select _id name parent
+        path: 'followings', // Fetch the followings of the author
+        select: '_id', // Only need the _id field to check the following relationship
+      },
+    })
+    .populate('community')
+    .populate({
+      path: 'children',
+      populate: {
+        path: 'author',
+        select: '_id name image',
       },
     })
     .populate({
       path: 'likes',
-      model: Like,
-      populate: {
-        path: 'user',
-        model: User,
-      },
+      populate: { path: 'user' },
     });
-  // Count the total number of top-level posts (threads) i.e., threads that are not comments.
-  const totalPostsCount = await Thread.countDocuments({
-    parentId: { $in: [null, undefined] },
-  }); // Get the total count of posts
 
   const posts = await postsQuery.exec();
 
-  const isNext = totalPostsCount > skipAmount + posts.length;
+  // Filter posts where the author is either:
+  // 1. Following the current user (author follows current user)
+  // 2. The author is the current user themselves
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.author._id.equals(userId) || // Author is the current user
+      post.author.followings.some((following: any) =>
+        following._id.equals(userId)
+      )
+  );
 
-  return { posts, isNext };
+  // Count the total number of filtered posts for pagination purposes
+  const totalPostsCount = filteredPosts.length;
+  const isNext = totalPostsCount > skipAmount + filteredPosts.length;
+
+  return { posts: filteredPosts, isNext };
 }
 
 interface Params {
@@ -157,7 +166,19 @@ export async function deleteThread(id: string, path: string): Promise<void> {
       throw new Error('Thread not found');
     }
 
-    // Fetch all child threads and their descendants recursively
+    if (mainThread.originalThread) {
+      const original = await Thread.findById(mainThread.originalThread);
+
+      if (original) {
+        original.reposts = original.reposts.filter(
+          (repost: any) => !repost.equals(mainThread._id) // Use equals to compare ObjectIds
+        );
+        console.log(original.reposts);
+        await original.save();
+      }
+    }
+
+    // Fetch all child threads and thei      console.log(original.reposts);
     const descendantThreads = await fetchAllChildThreads(id);
 
     // Get all descendant thread IDs including the main thread ID and child thread IDs

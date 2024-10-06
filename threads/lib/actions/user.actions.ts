@@ -271,3 +271,24 @@ export async function getActivity(userId: string) {
     throw error;
   }
 }
+
+export async function tuneIn(userId: string, recipentId: string, path: string) {
+  const recipentUser = await User.findById(recipentId);
+  if (!recipentUser) {
+    throw new Error('User to be followed doesnt exist');
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Error('Following user doesnt exist');
+  }
+
+  await User.findByIdAndUpdate(recipentId, {
+    $push: { followers: userId },
+  });
+  await User.findByIdAndUpdate(userId, {
+    $push: { followings: recipentId },
+  });
+
+  revalidatePath(path);
+}

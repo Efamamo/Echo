@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import UserCard from '@/components/cards/UserCard';
 import SearchBar from '@/components/forms/SearchBar';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default function Page() {
   const [result, setResult] = useState<any>({ users: [] });

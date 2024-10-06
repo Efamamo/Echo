@@ -82,89 +82,62 @@ export default function EchoCard({
             <p className="mt-1 text-small-regular text-light-2">{content}</p>
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
-                <div className="flex flex-col items-center gap-1">
-                  <LikeEcho
-                    hasLiked={hasLiked}
-                    userId={currentUserId}
-                    threadId={id}
-                  />
-                  <p className="text-light-1 text-subtle-medium">
-                    {likes.length}
-                  </p>
-                </div>
+                <LikeEcho
+                  hasLiked={hasLiked}
+                  userId={currentUserId}
+                  threadId={id}
+                />
 
-                <div className="flex flex-col items-center gap-1">
-                  <Link href={reply ? `/echos/${reply}` : `/echos/${id}`}>
-                    <Image
-                      src="/assets/reply.svg"
-                      alt="reply"
-                      width={24}
-                      height={24}
-                      className="cursor-pointer object-contain"
-                    />
-                  </Link>
-                  <p className="text-light-1 text-subtle-medium">
-                    {comments.length}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <RepostEcho
-                    text={content}
-                    author={currentUserId}
-                    originalThread={id}
-                  />
-                  <p className="text-light-1 text-subtle-medium">
-                    {reposts.length}
-                  </p>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
+                <Link href={reply ? `/echos/${reply}` : `/echos/${id}`}>
                   <Image
-                    src="/assets/share.svg"
-                    alt="share"
+                    src="/assets/reply.svg"
+                    alt="reply"
                     width={24}
                     height={24}
                     className="cursor-pointer object-contain"
+                    title="comments"
                   />
-                  <p className="text-light-1 text-subtle-medium">0</p>
-                </div>
-              </div>
-              {/* <div className="flex gap-4">
-                <p className="text-light-1 text-subtle-medium">
-                  {likes.length === 1 ? '1 like' : `${likes.length} likes`}
-                </p>
-                <p className="text-light-1 text-subtle-medium">
-                  {reposts.length === 1
-                    ? '1 repost'
-                    : `${reposts.length} reposts`}
-                </p>
-              </div> */}
+                </Link>
 
-              {dis && comments.length > 0 && (
+                <RepostEcho
+                  text={content}
+                  author={currentUserId}
+                  originalThread={id}
+                />
+
+                <Image
+                  src="/assets/share.svg"
+                  alt="share"
+                  width={24}
+                  height={24}
+                  className="cursor-pointer object-contain"
+                  title="share"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between mt-2 items-center">
+              <p className="text-light-1 text-subtle-medium">
+                {likes.length === 1 ? `1 like` : `${likes.length} likes`}
+              </p>
+
+              <div className="flex gap-4 items-center">
                 <Link
                   className="flex items-center"
                   href={reply ? `/echos/${reply}` : `/echos/${id}`}
                 >
-                  {comments.map((comment, index) => (
-                    <Image
-                      key={index}
-                      src={comment.author.image}
-                      alt={`user_${index}`}
-                      width={20}
-                      height={20}
-                      className={`${
-                        index !== 0 && '-ml-2'
-                      } rounded-full object-cover`}
-                    />
-                  ))}
-
-                  <p className="mt-1 ml-2 text-subtle-medium text-gray-1">
+                  <p className="text-subtle-medium text-light-1">
                     {comments.length === 1
-                      ? '1 reply'
-                      : `${comments.length} replies`}
+                      ? '1 comment'
+                      : `${comments.length} comments`}
                   </p>
                 </Link>
-              )}
+
+                <p className="text-light-1 text-subtle-medium">
+                  {reposts.length === 1
+                    ? `1 repost`
+                    : `${reposts.length} reposts`}
+                </p>
+              </div>
             </div>
           </div>
         </div>

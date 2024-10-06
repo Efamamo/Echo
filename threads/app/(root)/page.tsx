@@ -4,14 +4,14 @@ import { fetchUser } from '@/lib/actions/user.actions';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 export default async function Home() {
-  const result = await fetchPosts(1, 30);
   const user = await currentUser();
 
-  if (!user) return null;
-
+  if (!user) return redirect('sign-in');
   const userInfo = await fetchUser(user.id);
 
   if (!userInfo?.onBoarded) redirect('/onboarding');
+  const result = await fetchPosts(1, 30, userInfo._id);
+
   return (
     <>
       <h1 className="head-text">Home</h1>

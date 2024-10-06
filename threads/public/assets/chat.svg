@@ -1,13 +1,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#FFFFFF">
+<svg fill="#FFFFFF" height="177px" width="177px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-10.89 -10.89 239.54 239.54" xml:space="preserve" stroke="#FFFFFF" stroke-width="0.0021776200000000003">
 <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.9600000000000002">
-<path d="M8 18.7192C6.33865 20.1353 4.81983 21 2 21C3 20 4.27088 18.65 4.80115 16.5528C3.06674 15.114 2 13.1567 2 11C2 6.58172 6.47715 3 12 3C17.0995 3 21.3075 6.05369 21.9226 10" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.528"/>
-<path d="M16 19.8889C12.6863 19.8889 10 17.899 10 15.4444C10 12.9898 12.6863 11 16 11C19.3137 11 22 12.9898 22 15.4444C22 16.6426 21.36 17.73 20.3193 18.5293C20.6375 19.6944 21.4 20.4444 22 21C20.2 21 19.2835 20.4563 18.2077 19.5784C17.5244 19.7788 16.7795 19.8889 16 19.8889Z" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.528"/>
-</g>
-<g id="SVGRepo_iconCarrier">
-<path d="M8 18.7192C6.33865 20.1353 4.81983 21 2 21C3 20 4.27088 18.65 4.80115 16.5528C3.06674 15.114 2 13.1567 2 11C2 6.58172 6.47715 3 12 3C17.0995 3 21.3075 6.05369 21.9226 10" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.528"/>
-<path d="M16 19.8889C12.6863 19.8889 10 17.899 10 15.4444C10 12.9898 12.6863 11 16 11C19.3137 11 22 12.9898 22 15.4444C22 16.6426 21.36 17.73 20.3193 18.5293C20.6375 19.6944 21.4 20.4444 22 21C20.2 21 19.2835 20.4563 18.2077 19.5784C17.5244 19.7788 16.7795 19.8889 16 19.8889Z" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.528"/>
-</g>
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.435524"/>
+<g id="SVGRepo_iconCarrier"> <path d="M108.881,5.334C48.844,5.334,0,45.339,0,94.512c0,28.976,16.84,55.715,45.332,72.454 c-3.953,18.48-12.812,31.448-12.909,31.588l-9.685,13.873l16.798-2.153c1.935-0.249,47.001-6.222,79.122-26.942 c26.378-1.92,50.877-11.597,69.181-27.364c19.296-16.623,29.923-38.448,29.923-61.455C217.762,45.339,168.918,5.334,108.881,5.334z M115.762,168.489l-2.049,0.117l-1.704,1.145c-18.679,12.548-43.685,19.509-59.416,22.913c3.3-7.377,6.768-17.184,8.499-28.506 l0.809-5.292l-4.741-2.485C30.761,142.547,15,119.42,15,94.512c0-40.901,42.115-74.178,93.881-74.178s93.881,33.276,93.881,74.178 C202.762,133.194,164.547,165.688,115.762,168.489z"/> </g>
 </svg>

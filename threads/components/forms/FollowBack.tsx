@@ -6,31 +6,29 @@ import { deleteThread } from '@/lib/actions/thread.actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { react } from '@/lib/actions/like.actions';
+import { tuneIn } from '@/lib/actions/user.actions';
 
-export default function LikeEcho({
-  threadId,
+export default function TuneBack({
+  recipentId,
   userId,
-  hasLiked,
 }: {
-  threadId: string;
+  recipentId: string;
   userId: string;
-  hasLiked: boolean;
 }) {
   const pathname = usePathname();
 
   const onSubmit = async () => {
-    await react(userId, threadId, pathname);
+    await tuneIn(userId, recipentId, pathname);
   };
 
   return (
     <Image
-      src={hasLiked ? '/assets/heart-filled.svg' : '/assets/heart-gray.svg'}
-      alt="heart"
+      src="/assets/accept.svg"
+      alt="follow icon"
       width={24}
       height={24}
-      className="cursor-pointer object-contain"
+      className="cursor-pointer"
       onClick={onSubmit}
-      title="like"
     />
   );
 }

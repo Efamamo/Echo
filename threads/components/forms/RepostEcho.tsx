@@ -34,6 +34,7 @@ export default function RepostEcho({
       height={24}
       className="cursor-pointer object-contain"
       onClick={onSubmit}
+      title="repost"
     />
   );
 }

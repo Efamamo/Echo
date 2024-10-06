@@ -19,13 +19,15 @@ export default async function Page({ params }: { params: { id: string } }) {
     redirect('/onboarding');
   }
 
+  const current = await fetchUser(user.id);
+
   const userReplies = await fetchUserComments(params.id);
 
   return (
     <section>
       <ProfileHeader
-        accountId={userInfo.id}
-        authUserId={user.id}
+        accountUser={userInfo}
+        currentUser={current}
         name={userInfo.name}
         username={userInfo.username}
         imgUrl={userInfo.image}

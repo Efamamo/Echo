@@ -1,22 +1,32 @@
 import Image from 'next/image';
+import TuneIn from '../forms/FollowUser';
+import Link from 'next/link';
+import TuneBack from '../forms/FollowBack';
 
 interface Props {
-  accountId: string;
-  authUserId: string;
+  accountUser: any;
+  currentUser: any;
   name: string;
   username: string;
   imgUrl: string;
   bio: string;
   type?: 'User' | 'Community';
 }
-export default function ProfileHeader({
-  accountId,
-  authUserId,
+export default async function ProfileHeader({
+  accountUser,
+  currentUser,
   name,
   username,
   imgUrl,
   bio,
 }: Props) {
+  const userFollows = currentUser.followings.find((userId: any) =>
+    userId.equals(accountUser._id)
+  );
+  const userFollowed = accountUser.followings.find((userId: any) =>
+    userId.equals(currentUser._id)
+  );
+
   return (
     <div className="flex flex-col justify-start w-full">
       <div className="flex items-center justify-between">
@@ -37,8 +47,36 @@ export default function ProfileHeader({
             <p className="text-base-medium text-gray-1">@{username}</p>
           </div>
         </div>
-        {/*todo: COMMUNITY */}
+
+        {!accountUser._id.equals(currentUser._id) && (
+          <div className="text-light-1">
+            {userFollows && userFollowed ? (
+              <Image
+                src="/assets/chat.svg"
+                alt=",essage"
+                width={24}
+                height={24}
+                className="cursor-pointer object-contain"
+                title="message"
+              />
+            ) : userFollows && !userFollowed ? (
+              <Image
+                src="/assets/loading.svg"
+                alt="loading"
+                width={30}
+                height={30}
+                className="cursor-pointer object-contain"
+                title="loading"
+              />
+            ) : !userFollows && userFollowed ? (
+              <TuneBack userId={currentUser._id} recipentId={accountUser._id} />
+            ) : (
+              <TuneIn userId={currentUser._id} recipentId={accountUser._id} />
+            )}
+          </div>
+        )}
       </div>
+
       <p className="mt-6 max-w-lg text-base-regular text-light-2">{bio}</p>
       <div className="mt-12 h-0.5 w-full bg-dark-3" />
     </div>
