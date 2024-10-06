@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import LikeEcho from '../forms/LikeEcho';
 import DeleteEcho from '../forms/DeleteEcho';
+import RepostEcho from '../forms/RepostEcho';
 
 interface Props {
   id: string;
@@ -33,6 +34,7 @@ interface Props {
   }[];
   navigate?: boolean;
   reply?: string;
+  reposts: any[];
 }
 export default function EchoCard({
   id,
@@ -48,6 +50,7 @@ export default function EchoCard({
   likes,
   navigate,
   reply,
+  reposts,
 }: Props) {
   const hasLiked = likes.some((like) => like.user.id === currentUserId);
 
@@ -79,39 +82,64 @@ export default function EchoCard({
             <p className="mt-1 text-small-regular text-light-2">{content}</p>
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex gap-3.5">
-                <LikeEcho
-                  hasLiked={hasLiked}
-                  userId={currentUserId}
-                  threadId={id}
-                />
-                <Link href={reply ? `/echos/${reply}` : `/echos/${id}`}>
+                <div className="flex flex-col items-center gap-1">
+                  <LikeEcho
+                    hasLiked={hasLiked}
+                    userId={currentUserId}
+                    threadId={id}
+                  />
+                  <p className="text-light-1 text-subtle-medium">
+                    {likes.length}
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-center gap-1">
+                  <Link href={reply ? `/echos/${reply}` : `/echos/${id}`}>
+                    <Image
+                      src="/assets/reply.svg"
+                      alt="reply"
+                      width={24}
+                      height={24}
+                      className="cursor-pointer object-contain"
+                    />
+                  </Link>
+                  <p className="text-light-1 text-subtle-medium">
+                    {comments.length}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <RepostEcho
+                    text={content}
+                    author={currentUserId}
+                    originalThread={id}
+                  />
+                  <p className="text-light-1 text-subtle-medium">
+                    {reposts.length}
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-center gap-1">
                   <Image
-                    src="/assets/reply.svg"
-                    alt="reply"
+                    src="/assets/share.svg"
+                    alt="share"
                     width={24}
                     height={24}
                     className="cursor-pointer object-contain"
                   />
-                </Link>
-
-                <Image
-                  src="/assets/repost.svg"
-                  alt="repost"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
-                <Image
-                  src="/assets/share.svg"
-                  alt="share"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
+                  <p className="text-light-1 text-subtle-medium">0</p>
+                </div>
               </div>
-              <p className="text-light-1 text-subtle-medium">
-                {likes.length === 1 ? '1 like' : `${likes.length} likes`}
-              </p>
+              {/* <div className="flex gap-4">
+                <p className="text-light-1 text-subtle-medium">
+                  {likes.length === 1 ? '1 like' : `${likes.length} likes`}
+                </p>
+                <p className="text-light-1 text-subtle-medium">
+                  {reposts.length === 1
+                    ? '1 repost'
+                    : `${reposts.length} reposts`}
+                </p>
+              </div> */}
+
               {dis && comments.length > 0 && (
                 <Link
                   className="flex items-center"

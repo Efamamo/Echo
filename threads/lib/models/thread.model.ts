@@ -15,6 +15,7 @@ const threadSchema = new mongoose.Schema({
   parentId: {
     type: String,
   },
+  originalThread: { type: mongoose.Schema.Types.ObjectId, ref: 'Thread' },
   children: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +26,12 @@ const threadSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Like',
+    },
+  ],
+  reposts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Thread',
     },
   ],
 });

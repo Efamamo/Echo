@@ -234,6 +234,10 @@ export async function getActivity(userId: string) {
       return acc.concat(userThread.likes);
     }, []);
 
+    const ThreadReposts = userThreads.reduce((acc, userThread) => {
+      return acc.concat(userThread.reposts);
+    }, []);
+
     const likes = await Like.find({
       _id: { $in: ThreadLikes },
       user: { $ne: userId },
@@ -252,7 +256,16 @@ export async function getActivity(userId: string) {
       select: 'name image _id',
     });
 
-    return { replies, likes };
+    const reposts = await Thread.find({
+      _id: { $in: ThreadReposts },
+      author: { $ne: userId }, // Exclude threads authored by the same user
+    }).populate({
+      path: 'author',
+      model: User,
+      select: 'name image _id',
+    });
+
+    return { replies, likes, reposts };
   } catch (error) {
     console.error('Error fetching replies: ', error);
     throw error;

@@ -34,6 +34,7 @@ export default async function Home() {
                   comments={post.children}
                   dis={true}
                   likes={post.likes}
+                  reposts={post.reposts}
                 />
               );
             })}

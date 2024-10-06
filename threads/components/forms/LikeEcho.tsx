@@ -19,6 +19,7 @@ export default function LikeEcho({
   const pathname = usePathname();
 
   const onSubmit = async () => {
+    console.log('linking');
     await react(userId, threadId, pathname);
   };
 

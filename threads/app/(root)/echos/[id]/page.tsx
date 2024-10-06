@@ -33,6 +33,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           comments={thread.children}
           likes={thread.likes}
           navigate={true}
+          reposts={thread.reposts}
         />
       </div>
       <div className="mt-7 ">
@@ -58,6 +59,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             isComment={true}
             dis={true}
             likes={child.likes}
+            reposts={child.reposts}
           />
         ))}
       </div>

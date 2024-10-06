@@ -299,3 +299,56 @@ export async function addCommentToThread(
     throw new Error('Unable to add comment');
   }
 }
+
+interface repostParams {
+  text: string;
+  author: string;
+  originalThread: string;
+  communityId: string | null;
+  path: string;
+}
+
+export async function repostThread({
+  text,
+  author,
+  communityId,
+  path,
+  originalThread,
+}: repostParams) {
+  try {
+    await connectToDB();
+
+    const communityIdObject = await Community.findOne(
+      { id: communityId },
+      { _id: 1 }
+    );
+
+    const user = await User.findOne({ id: author });
+
+    const createdThread = await Thread.create({
+      text,
+      author: user._id,
+      community: communityIdObject,
+      originalThread: originalThread,
+    });
+
+    // Update User model
+    await User.findByIdAndUpdate(user._id, {
+      $push: { threads: createdThread._id },
+    });
+
+    await Thread.findByIdAndUpdate(originalThread, {
+      $push: { reposts: createdThread._id },
+    });
+
+    if (communityIdObject) {
+      // Update Community model
+      await Community.findByIdAndUpdate(communityIdObject, {
+        $push: { threads: createdThread._id },
+      });
+    }
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to create thread: ${error.message}`);
+  }
+}

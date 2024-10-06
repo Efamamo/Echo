@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { fetchUser, fetchUsers, getActivity } from '@/lib/actions/user.actions';
@@ -24,12 +24,14 @@ export default async function Page() {
     <section>
       <h1 className="head-text mb-1">Ripples</h1>
       <section className="mt-10 flex flex-col gap-5">
-        {activities.replies.length === 0 && activities.likes.length === 0 ? (
+        {activities.replies.length === 0 &&
+        activities.likes.length === 0 &&
+        activities.reposts.length === 0 ? (
           <p className="no-result">No Ripples</p>
         ) : (
           <>
             {activities.replies.map((reply) => (
-              <Link key={reply._id} href={`/thread/${reply.parentId}`}>
+              <Link key={reply._id} href={`/echos/${reply.parentId}`}>
                 <article className="activity-card">
                   <Image
                     src={reply.author.image}
@@ -48,7 +50,7 @@ export default async function Page() {
               </Link>
             ))}
             {activities.likes.map((like) => (
-              <Link key={like._id} href={`/thread/${like.thread}`}>
+              <Link key={like._id} href={`/echos/${like.thread}`}>
                 <article className="activity-card">
                   <Image
                     src={like.user.image}
@@ -62,6 +64,25 @@ export default async function Page() {
                       {like.user.name}
                     </span>{' '}
                     liked to your echo
+                  </p>
+                </article>
+              </Link>
+            ))}
+            {activities.reposts.map((repost) => (
+              <Link key={repost._id} href={`/echos/${repost._id}`}>
+                <article className="activity-card">
+                  <Image
+                    src={repost.author.image}
+                    alt="profile picture"
+                    width={20}
+                    height={20}
+                    className="rounded-full object-cover"
+                  />
+                  <p className="!text-small-regular text-light-1">
+                    <span className="mr-1 text-purple-500">
+                      {repost.author.name}
+                    </span>{' '}
+                    reposted to your echo
                   </p>
                 </article>
               </Link>

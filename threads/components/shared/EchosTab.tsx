@@ -31,6 +31,7 @@ export default async function EchosTab({
 
   return (
     <section className="mt-9 flex flex-col gap-10">
+      {result.length === 0 && <p className="no-result">No Result</p>}
       {result.map((thread: any) => {
         let reply = '';
         if (fetch === 'replies') {
@@ -63,6 +64,7 @@ export default async function EchosTab({
             isComment={true}
             dis={true}
             likes={thread.likes}
+            reposts={thread.reposts}
           />
         );
       })}
