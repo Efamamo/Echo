@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { repostThread } from '@/lib/actions/thread.actions';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function RepostEcho({
   text,
@@ -14,9 +15,9 @@ export default function RepostEcho({
   originalThread: string;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const onSubmit = async () => {
-    console.log(text);
     await repostThread({
       text,
       author,
@@ -24,6 +25,7 @@ export default function RepostEcho({
       path: pathname,
       originalThread,
     });
+    router.push('/');
   };
 
   return (

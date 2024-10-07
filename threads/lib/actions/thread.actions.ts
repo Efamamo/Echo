@@ -346,6 +346,11 @@ export async function repostThread({
 
     const user = await User.findOne({ id: author });
 
+    const ot = await Thread.findById(originalThread);
+    if (ot.parentId) {
+      return;
+    }
+
     const createdThread = await Thread.create({
       text,
       author: user._id,

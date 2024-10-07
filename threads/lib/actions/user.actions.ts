@@ -287,6 +287,15 @@ export async function tuneIn(userId: string, recipentId: string, path: string) {
     throw new Error('Following user doesnt exist');
   }
 
+  // Check if user is already following recipent
+  const userFollowing = user.followings.find((id: any) =>
+    id.equals(recipentId)
+  );
+
+  // if user is already following just return
+  if (userFollowing) {
+    return;
+  }
   await User.findByIdAndUpdate(recipentId, {
     $push: { followers: userId },
   });
@@ -295,4 +304,41 @@ export async function tuneIn(userId: string, recipentId: string, path: string) {
   });
 
   revalidatePath(path);
+}
+
+export async function fetchSuggestedUsers(userId: string) {
+  try {
+    // Connect to the database
+    await connectToDB();
+
+    // Step 1: Find the user's followings
+    const user = await User.findOne({ id: userId }).populate('followings');
+
+    if (user.followings.length === 0) {
+      return [];
+    }
+
+    const searchIds: any = [];
+
+    user.followings.forEach((u: any) => {
+      searchIds.push(...u.followings);
+    });
+
+    // Step 2: Find the followings of the followings
+    const suggestedUsers = await User.find({
+      _id: { $in: searchIds, $nin: user.followings },
+      id: { $ne: userId },
+    })
+      .populate({
+        path: 'followings', // Populate followings of followings
+        select: 'name id image', // Select fields you want to fetch from the followings
+      })
+      .limit(4)
+      .exec();
+
+    return suggestedUsers; // Return the followings of followings array
+  } catch (error) {
+    console.error('Error fetching followings of followings:', error);
+    throw error;
+  }
 }

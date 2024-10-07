@@ -99,20 +99,24 @@ export default function EchoCard({
                   />
                 </Link>
 
-                <RepostEcho
-                  text={content}
-                  author={currentUserId}
-                  originalThread={id}
-                />
+                {!parentId && (
+                  <RepostEcho
+                    text={content}
+                    author={currentUserId}
+                    originalThread={id}
+                  />
+                )}
 
-                <Image
-                  src="/assets/share.svg"
-                  alt="share"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                  title="share"
-                />
+                {!parentId && (
+                  <Image
+                    src="/assets/share.svg"
+                    alt="share"
+                    width={24}
+                    height={24}
+                    className="cursor-pointer object-contain"
+                    title="share"
+                  />
+                )}
               </div>
             </div>
             <div className="flex justify-between mt-2 items-center">
@@ -127,16 +131,20 @@ export default function EchoCard({
                 >
                   <p className="text-subtle-medium text-light-1">
                     {comments.length === 1
-                      ? '1 comment'
-                      : `${comments.length} comments`}
+                      ? `1 ${parentId ? 'reply' : 'comment'}`
+                      : `${comments.length} ${
+                          !parentId ? 'comments' : 'replies'
+                        }`}
                   </p>
                 </Link>
 
-                <p className="text-light-1 text-subtle-medium">
-                  {reposts.length === 1
-                    ? `1 repost`
-                    : `${reposts.length} reposts`}
-                </p>
+                {!parentId && (
+                  <p className="text-light-1 text-subtle-medium">
+                    {reposts.length === 1
+                      ? `1 repost`
+                      : `${reposts.length} reposts`}
+                  </p>
+                )}
               </div>
             </div>
           </div>

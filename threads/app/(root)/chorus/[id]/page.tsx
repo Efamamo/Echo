@@ -18,8 +18,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <section>
       <ProfileHeader
-        accountId={communityDetails.id}
-        authUserId={user.id}
+        accountUser={communityDetails}
+        currentUser={user}
         name={communityDetails.name}
         username={communityDetails.username}
         imgUrl={communityDetails.image}
@@ -54,6 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               currentUserId={user.id}
               accountId={communityDetails._id}
               accountType="Community"
+              fetch="echos"
             />
           </TabsContent>
           <TabsContent value="Usermembers" className="w-full text-light-1">
@@ -75,6 +76,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               currentUserId={user.id}
               accountId={communityDetails._id}
               accountType="User"
+              fetch="community"
             />
           </TabsContent>
         </Tabs>
