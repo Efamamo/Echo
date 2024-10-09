@@ -22,7 +22,7 @@ export async function fetchPosts(
   const postsQuery = Thread.find({
     parentId: { $in: [null, undefined] },
   })
-    .sort({ createdAt: 'desc' })
+    .sort({ createdAt: 'desc', _id: 'desc' })
     .skip(skipAmount)
     .limit(pageSize)
     .populate({
