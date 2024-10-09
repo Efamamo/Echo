@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const communityDetails = await fetchCommunityDetails(params.id);
 
   return (
-    <section>
+    <section className={`w-full h-full relative max-w-4xl`}>
       <ProfileHeader
         accountUser={communityDetails}
         currentUser={user}

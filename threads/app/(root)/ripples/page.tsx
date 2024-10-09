@@ -21,7 +21,7 @@ export default async function Page() {
   const activities = await getActivity(userInfo._id);
 
   return (
-    <section>
+    <section className={`w-full h-full relative max-w-4xl`}>
       <h1 className="head-text mb-1">Ripples</h1>
       <section className="mt-10 flex flex-col gap-5">
         {activities.replies.length === 0 &&

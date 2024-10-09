@@ -6,6 +6,8 @@ import Thread from '../models/thread.model';
 import User from '../models/user.model';
 import { connectToDB } from '../mongoose';
 import Like from '../models/like.model';
+import Whisper from '../models/whisper.model';
+import Message from '../models/message.model';
 
 // Fetch Single User by id (from clerk) and populate it with community
 export async function fetchUser(userId: string) {
@@ -296,6 +298,20 @@ export async function tuneIn(userId: string, recipentId: string, path: string) {
   if (userFollowing) {
     return;
   }
+
+  const userFollowed = recipentUser.followings.find((id: any) =>
+    id.equals(userId)
+  );
+
+  if (userFollowed) {
+    const newWhisper = new Whisper({
+      userOne: userId,
+      userTwo: recipentId,
+    });
+
+    await newWhisper.save();
+  }
+
   await User.findByIdAndUpdate(recipentId, {
     $push: { followers: userId },
   });
@@ -341,4 +357,103 @@ export async function fetchSuggestedUsers(userId: string) {
     console.error('Error fetching followings of followings:', error);
     throw error;
   }
+}
+
+export async function fetchUserFriends(userId: string) {
+  const user = await User.findOne({ id: userId }).populate('followings');
+  const friends: any = [];
+
+  user.followings.forEach((u: any) => {
+    for (let uid of u.followings) {
+      if (uid.equals(user._id)) {
+        friends.push(u);
+      }
+    }
+  });
+
+  return friends;
+}
+
+export async function fetchUserWhispers(userId: string) {
+  const whispers = await Whisper.find({
+    $or: [{ userOne: userId }, { userTwo: userId }],
+  })
+    .populate('userOne')
+    .populate('userTwo')
+    .populate('lastMessage');
+
+  return whispers;
+}
+
+export async function fetchWisperById(id: string) {
+  const whisper = await Whisper.findById(id)
+    .populate('userOne')
+    .populate('userTwo')
+    .populate({
+      path: 'messages',
+      options: { sort: { createdAt: -1, _id: -1 } }, // Secondary sort by _id to break ties
+    });
+
+  if (!whisper) {
+    throw new Error('Whisper not found');
+  }
+
+  return whisper;
+}
+
+export async function addMessage(
+  userId: string,
+  content: string,
+  convId: string,
+  path: string
+) {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error('user not found');
+  }
+
+  const whisper = await Whisper.findById(convId);
+
+  if (!whisper) {
+    throw new Error('conversation not found');
+  }
+
+  const newMessage = new Message({
+    owner: userId,
+    content: content,
+  });
+
+  const savedMessage = await newMessage.save();
+  whisper.messages.push(savedMessage._id);
+  whisper.lastMessage = newMessage._id;
+
+  await whisper.save();
+
+  revalidatePath(path);
+}
+
+export async function markMessageAsSeen(
+  messageId: string,
+  userId: string,
+  chatId: string
+) {
+  const message = await Message.findById(messageId);
+
+  if (!message) {
+    throw new Error('Message not found');
+  }
+
+  if (message.owner.equals(userId)) {
+    return;
+  }
+
+  if (!message.seen) {
+    message.seen = true;
+    await message.save();
+  }
+
+  console.log(`/whispers/${chatId}`);
+
+  revalidatePath(`/whispers/${chatId}`);
 }

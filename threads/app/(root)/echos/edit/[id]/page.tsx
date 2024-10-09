@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const thread = await fetchThreadById(params.id);
   return (
-    <>
+    <div className={`w-full h-full relative max-w-4xl `}>
       <h1 className="head-text">Edit Thread</h1>
       <PostThread
         userId={userInfo._id}
@@ -26,6 +26,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         type={'Edit'}
         text={thread.text}
       />
-    </>
+    </div>
   );
 }

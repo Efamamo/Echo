@@ -60,7 +60,7 @@ export default function Page() {
   }
 
   return (
-    <section>
+    <section className={`w-full h-full relative max-w-4xl`}>
       <h1 className="head-text mb-10">Chorus</h1>
       <SearchBar
         searchString={searchString}

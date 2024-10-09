@@ -15,9 +15,12 @@ export default async function Page() {
     redirect('/onboarding');
   }
   return (
-    <>
+    <section
+      className={`w-full h-full relative max-w-4xl
+    `}
+    >
       <h1 className="head-text">Create Echo</h1>
       <PostThread userId={userInfo._id} type="Add" />
-    </>
+    </section>
   );
 }

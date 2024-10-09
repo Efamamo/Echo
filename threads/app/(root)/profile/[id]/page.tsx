@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const userReplies = await fetchUserComments(params.id);
 
   return (
-    <section>
+    <section className={`w-full h-full relative max-w-4xl `}>
       <ProfileHeader
         accountUser={userInfo}
         currentUser={current}

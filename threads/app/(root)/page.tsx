@@ -13,7 +13,7 @@ export default async function Home() {
   const result = await fetchPosts(1, 30, userInfo._id);
 
   return (
-    <>
+    <div className="w-full h-full relative max-w-4xl">
       <h1 className="head-text">Home</h1>
       <section className="mt-9 flex flex-col gap-10">
         {result.posts.length === 0 ? (
@@ -41,6 +41,6 @@ export default async function Home() {
           </>
         )}
       </section>
-    </>
+    </div>
   );
 }

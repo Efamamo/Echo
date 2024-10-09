@@ -7,6 +7,7 @@ import { currentUser } from '@clerk/nextjs/server';
 export default function Page() {
   const [result, setResult] = useState<any>({ users: [] });
   const [searchString, setSearchString] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
 
   useEffect(() => {
     async function fetchUsers() {
@@ -35,6 +36,9 @@ export default function Page() {
     fetchUsers();
   }, []);
 
+  if (!currentUser) {
+  }
+
   async function onsubmit() {
     try {
       const response = await fetch(
@@ -59,7 +63,10 @@ export default function Page() {
   }
 
   return (
-    <section>
+    <section
+      className={`w-full h-full relative max-w-4xl 
+    `}
+    >
       <h1 className="head-text mb-10">Quest</h1>
       <SearchBar
         searchString={searchString}

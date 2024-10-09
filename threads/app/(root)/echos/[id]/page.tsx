@@ -19,7 +19,10 @@ export default async function Page({ params }: { params: { id: string } }) {
   const thread = await fetchThreadById(params.id);
 
   return (
-    <section className="relative">
+    <section
+      className={`w-full h-full relative  max-w-4xl
+    `}
+    >
       <div>
         <ThreadCard
           key={thread._id}
