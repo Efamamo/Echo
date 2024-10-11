@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { markMessageAsSeen } from '@/lib/actions/user.actions'; // Ensure this action is implemented
+import DeleteChat from '../forms/DeleteChat';
+import UpdateChat from '../forms/UpdateChat';
 
 export default function Message({
   content,
@@ -21,6 +23,7 @@ export default function Message({
   seen: boolean;
   chatId: string;
 }) {
+  const [open, setOpen] = useState(false);
   const date = new Date(time);
   const options: Intl.DateTimeFormatOptions = {
     hour: 'numeric',
@@ -42,7 +45,9 @@ export default function Message({
         !(owner === current)
           ? 'ml-auto justify-end rounded-tr-none'
           : 'rounded-tl-none mr-auto bg-[#1f2d4d]'
-      } flex items-end gap-2 py-2 px-4  m-2`}
+      } flex items-end gap-2 py-2 px-4  m-2 relative`}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
     >
       <h3>{content}</h3>
       <div
@@ -60,6 +65,12 @@ export default function Message({
           <Image src="/assets/tick.svg" alt="seen" width={20} height={20} />
         )}
       </div>
+      {open && owner === current && (
+        <div className="absolute top-0 right-0 flex flex-col p-3 gap-4 bg-dark-3 z-50">
+          <UpdateChat />
+          <DeleteChat messageId={id} userId={current} chatId={chatId} />
+        </div>
+      )}
     </div>
   );
 }
