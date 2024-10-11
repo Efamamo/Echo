@@ -66,7 +66,7 @@ export default function Message({
         )}
       </div>
       {open && owner === current && (
-        <div className="absolute top-0 right-0 flex flex-col p-3 gap-4 bg-dark-3 z-50">
+        <div className="absolute top-0 -right-24 flex flex-col p-3 gap-4 bg-dark-3 z-50">
           <UpdateChat />
           <DeleteChat messageId={id} userId={current} chatId={chatId} />
         </div>

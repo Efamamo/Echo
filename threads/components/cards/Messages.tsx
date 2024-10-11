@@ -28,6 +28,7 @@ export default function Messages({
 
     // Listen for incoming messages
     pusherClient.bind('incoming-message', (message: Msg) => {
+      console.log('Incoming message:', message);
       setIncomingMessages((prev) => {
         // Check if the message already exists in the state
         if (prev.find((msg) => msg._id === message._id)) {
