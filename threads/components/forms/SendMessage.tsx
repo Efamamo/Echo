@@ -14,7 +14,9 @@ export default function SendMessage({
   const [content, setContent] = useState('');
   const pathName = usePathname();
 
-  async function sendMessage() {
+  async function sendMessage(e: any) {
+    e.preventDefault();
+
     await addMessage(userId, content, convId, pathName);
     setContent('');
   }

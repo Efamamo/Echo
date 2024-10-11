@@ -8,6 +8,7 @@ import { connectToDB } from '../mongoose';
 import Like from '../models/like.model';
 import Whisper from '../models/whisper.model';
 import Message from '../models/message.model';
+import { pusherServer } from '../pusher';
 
 // Fetch Single User by id (from clerk) and populate it with community
 export async function fetchUser(userId: string) {
@@ -424,19 +425,20 @@ export async function addMessage(
     content: content,
   });
 
+  const convString = convId.toString();
+  pusherServer.trigger(convString, 'incoming-message', newMessage);
+
   const savedMessage = await newMessage.save();
   whisper.messages.push(savedMessage._id);
   whisper.lastMessage = newMessage._id;
 
   await whisper.save();
-
-  revalidatePath(path);
 }
 
 export async function markMessageAsSeen(
   messageId: string,
   userId: string,
-  chatId: string
+  convId: string
 ) {
   const message = await Message.findById(messageId);
 
@@ -444,16 +446,16 @@ export async function markMessageAsSeen(
     throw new Error('Message not found');
   }
 
-  if (message.owner.equals(userId)) {
-    return;
-  }
-
-  if (!message.seen) {
+  // Mark as seen if not already and user is not the owner
+  if (message.owner.toString() !== userId && !message.seen) {
     message.seen = true;
     await message.save();
+
+    // Notify via Pusher
+    const convString = convId.toString();
+    pusherServer.trigger(convString, 'message-seen', {
+      messageId,
+      seen: true,
+    });
   }
-
-  console.log(`/whispers/${chatId}`);
-
-  revalidatePath(`/whispers/${chatId}`);
 }

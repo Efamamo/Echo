@@ -1,5 +1,4 @@
-import ChatCard from '@/components/cards/ChatCard';
-import Message from '@/components/cards/Message';
+import Messages from '@/components/cards/Messages';
 import SendMessage from '@/components/forms/SendMessage';
 import WhisperConatiner from '@/components/shared/item-lists/whispers/WhisperContainer';
 import { fetchUser, fetchWisperById } from '@/lib/actions/user.actions';
@@ -8,7 +7,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+interface Messages {
+  id: string;
+  owner: string;
+  content: string;
+  time: string;
+  seen: boolean;
+}
+
 export default async function Chat({ params }: { params: { id: string } }) {
+  let messages;
   const user = await currentUser();
   if (!user) return;
 
@@ -22,6 +30,15 @@ export default async function Chat({ params }: { params: { id: string } }) {
     recipent = whisper.userTwo;
   }
 
+  const userIdString = userInfo._id.toString();
+
+  messages = whisper.messages.map((message: any) => ({
+    _id: message._id.toString(),
+    owner: message.owner.toString(),
+    content: message.content,
+    createdAt: message.createdAt,
+    seen: message.seen,
+  }));
   return (
     <WhisperConatiner>
       <div className="flex items-center gap-4 p-2 border-b border-gray-700">
@@ -44,7 +61,7 @@ export default async function Chat({ params }: { params: { id: string } }) {
       </div>
 
       <div
-        className="h-[85%] border-b border-gray-700 overflow-y-scroll flex pb-2  flex-col-reverse"
+        className="max-h-[600px] border-b border-gray-700 overflow-y-scroll flex pb-2  flex-col-reverse"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -56,20 +73,14 @@ export default async function Chat({ params }: { params: { id: string } }) {
           </div>
         )}
 
-        {whisper.messages.map((message: any) => (
-          <Message
-            id={message._id}
-            owner={message.owner}
-            content={message.content}
-            current={userInfo._id}
-            time={message.createdAt}
-            seen={message.seen}
-            chatId={params.id}
-          />
-        ))}
+        <Messages
+          messages={messages}
+          userId={userIdString}
+          chatId={params.id}
+        />
       </div>
 
-      <SendMessage convId={params.id} userId={userInfo._id} />
+      <SendMessage convId={params.id} userId={userIdString} />
     </WhisperConatiner>
   );
 }
