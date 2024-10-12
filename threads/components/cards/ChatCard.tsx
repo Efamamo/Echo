@@ -1,9 +1,17 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 
 interface ChatProps {
   image: string;
-  lastMessage: any;
+  lastMessage:
+    | {
+        createdAt: any;
+        content: any;
+        seen: any;
+        owner: any;
+      }
+    | any;
   name: string;
   id: string;
   current: string;
@@ -33,7 +41,7 @@ export default function ChatCard({
         <h3 className="text-small-semibold">{name}</h3>
         <p
           className={`text-small-regular opacity-50 ${
-            !lastMessage.seen && !lastMessage.owner.equals(current)
+            !lastMessage.seen && !(lastMessage.owner === current)
               ? 'opacity-100'
               : ''
           } `}

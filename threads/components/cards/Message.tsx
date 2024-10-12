@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { markMessageAsSeen } from '@/lib/actions/user.actions'; // Ensure this action is implemented
+import { markMessageAsSeen, updateMessage } from '@/lib/actions/user.actions'; // Ensure this action is implemented
 import DeleteChat from '../forms/DeleteChat';
 import UpdateChat from '../forms/UpdateChat';
+import { usePathname } from 'next/navigation';
 
 export default function Message({
   content,
@@ -23,6 +24,8 @@ export default function Message({
   seen: boolean;
   chatId: string;
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [inpValue, setInpvalue] = useState(content);
   const [open, setOpen] = useState(false);
   const date = new Date(time);
   const options: Intl.DateTimeFormatOptions = {
@@ -39,6 +42,14 @@ export default function Message({
     }
   }, [seen, current, owner, id]);
 
+  const path = usePathname();
+
+  async function update(e: any) {
+    e.preventDefault();
+    await updateMessage(current, inpValue, chatId, path, id);
+    setIsEditing(false);
+  }
+
   return (
     <div
       className={`max-w-64 justify-start rounded-full  bg-dark-4 ${
@@ -49,7 +60,20 @@ export default function Message({
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <h3>{content}</h3>
+      {!isEditing && <h3>{content}</h3>}
+      {isEditing && (
+        <form onSubmit={update}>
+          <input
+            className="bg-transparent border-none outline-none text-light-1 w-full"
+            type="text"
+            value={inpValue}
+            onChange={(e) => {
+              setInpvalue(e.target.value);
+            }}
+            autoFocus
+          />
+        </form>
+      )}
       <div
         className={`flex items-center gap-0.5 ${
           owner === current ? 'relative top-0.5' : ''
@@ -65,9 +89,9 @@ export default function Message({
           <Image src="/assets/tick.svg" alt="seen" width={20} height={20} />
         )}
       </div>
-      {open && owner === current && (
+      {open && !isEditing && owner === current && (
         <div className="absolute top-0 -right-24 flex flex-col p-3 gap-4 bg-dark-3 z-50">
-          <UpdateChat />
+          <UpdateChat setEdit={setIsEditing} />
           <DeleteChat messageId={id} userId={current} chatId={chatId} />
         </div>
       )}

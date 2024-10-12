@@ -18,24 +18,36 @@ export default async function Layout({ children }: { children: ReactNode }) {
   }
   const whispers = await fetchUserWhispers(userInfo._id);
 
+  const chats = whispers.map((whisper) => ({
+    userOne: whisper.userOne,
+    lastMessage: {
+      createdAt: whisper.lastMessage.createdAt,
+      content: whisper.lastMessage.content,
+      seen: whisper.lastMessage.seen,
+      owner: whisper.lastMessage.owner,
+    },
+    userTwo: whisper.userTwo,
+    id: whisper._id.toString(),
+  }));
+
   return (
     <>
       <ItemList title="Whispers">
-        {whispers.map((whisper) => {
+        {chats.map((whisper) => {
           let recipent = whisper.userOne;
-          if (userInfo._id.equals(whisper.userOne._id)) {
+          if (userInfo._id.toString() === whisper.userOne._id.toString()) {
             recipent = whisper.userTwo;
           }
 
           return (
             <>
               <ChatCard
-                id={whisper._id}
-                key={whisper._id}
+                id={whisper.id}
+                key={whisper.id}
                 image={recipent.image}
                 name={recipent.name}
                 lastMessage={whisper.lastMessage ? whisper.lastMessage : ''}
-                current={userInfo._id}
+                current={userInfo._id.toString()}
               />
             </>
           );

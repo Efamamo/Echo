@@ -10,7 +10,7 @@ const whisperSchema = new mongoose.Schema({
   ],
   userOne: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   userTwo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  lastUpdate: { type: Date },
+  lastUpdate: { type: Date, default: Date.now() },
   lastMessage: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Message',

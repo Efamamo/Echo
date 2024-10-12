@@ -381,7 +381,8 @@ export async function fetchUserWhispers(userId: string) {
   })
     .populate('userOne')
     .populate('userTwo')
-    .populate('lastMessage');
+    .populate('lastMessage')
+    .sort({ lastUpdate: -1 });
 
   return whispers;
 }
@@ -431,6 +432,7 @@ export async function addMessage(
   const savedMessage = await newMessage.save();
   whisper.messages.push(savedMessage._id);
   whisper.lastMessage = newMessage._id;
+  whisper.lastUpdate = Date.now();
 
   await whisper.save();
 }
@@ -458,4 +460,63 @@ export async function markMessageAsSeen(
       seen: true,
     });
   }
+}
+
+export async function deleteMessage(
+  messageId: string,
+  userId: string,
+  convId: string,
+  path: string
+) {
+  const message = await Message.findById(messageId);
+
+  if (!message) {
+    throw new Error('Message not found');
+  }
+
+  if (message.owner.toString() !== userId) {
+    throw new Error('Message doesnt belong to the user');
+  }
+
+  await Message.findByIdAndDelete(messageId);
+
+  const convString = convId.toString();
+  pusherServer.trigger(convString, 'delete-message', {
+    messageId,
+  });
+
+  revalidatePath(path);
+}
+
+export async function updateMessage(
+  userId: string,
+  content: string,
+  convId: string,
+  path: string,
+  messageId: string
+) {
+  const whisper = await Whisper.findById(convId);
+
+  if (!whisper) {
+    throw new Error('conversation not found');
+  }
+
+  const message = await Message.findById(messageId);
+
+  if (!message) {
+    throw new Error('Message not found');
+  }
+
+  if (message.owner.toString() !== userId) {
+    throw new Error('Message doesnt belong to the user');
+  }
+
+  message.content = content;
+  whisper.lastUpdate = Date.now();
+
+  const convString = convId.toString();
+  pusherServer.trigger(convString, 'update-message', message);
+
+  await message.save();
+  await whisper.save();
 }

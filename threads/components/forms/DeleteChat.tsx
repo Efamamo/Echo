@@ -1,3 +1,4 @@
+import { deleteMessage } from '@/lib/actions/user.actions';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -12,7 +13,9 @@ function DeleteChat({
   chatId: string;
 }) {
   const path = usePathname();
-  async function deleteM() {}
+  async function deleteM() {
+    await deleteMessage(messageId, userId, chatId, path);
+  }
   return (
     <div
       onClick={deleteM}

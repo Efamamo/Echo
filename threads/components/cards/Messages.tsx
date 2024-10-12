@@ -20,7 +20,8 @@ export default function Messages({
   chatId: string;
   messages: Msg[];
 }) {
-  const [incomingMessages, setIncomingMessages] = useState<Msg[]>([]);
+  console.log(chatId);
+  const [incomingMessages, setIncomingMessages] = useState<Msg[]>(messages);
 
   useEffect(() => {
     // Subscribe to the chat channel
@@ -28,12 +29,7 @@ export default function Messages({
 
     // Listen for incoming messages
     pusherClient.bind('incoming-message', (message: Msg) => {
-      console.log('Incoming message:', message);
       setIncomingMessages((prev) => {
-        // Check if the message already exists in the state
-        if (prev.find((msg) => msg._id === message._id)) {
-          return prev;
-        }
         return [...prev, message];
       });
     });
@@ -50,13 +46,26 @@ export default function Messages({
       }
     );
 
+    // Listen for incoming messages
+    pusherClient.bind('delete-message', (data: { messageId: string }) => {
+      setIncomingMessages(
+        (prev) => prev.filter((m) => m._id !== data.messageId) // Filter out the message with the matching _id
+      );
+    });
+
+    pusherClient.bind('update-message', (message: Msg) => {
+      setIncomingMessages((prevMessages) =>
+        prevMessages.map((m) =>
+          m._id === message._id ? { ...m, ...message } : m
+        )
+      );
+    });
+
     // Cleanup on unmount
     return () => {
       pusherClient.unsubscribe(chatId);
     };
   }, [chatId]);
-
-  // Combine existing messages with incoming messages
 
   // Remove duplicate messages by using a Set or filtering
   const uniqueMessages = Array.from(
@@ -72,19 +81,6 @@ export default function Messages({
   return (
     <>
       {sortedMessages.map((message: any) => (
-        <Message
-          key={message._id} // Ensure this is unique
-          content={message.content}
-          time={message.createdAt}
-          owner={message.owner}
-          current={userId}
-          id={message._id}
-          chatId={chatId}
-          seen={message.seen}
-        />
-      ))}
-
-      {messages.map((message: any) => (
         <Message
           key={message._id} // Ensure this is unique
           content={message.content}
