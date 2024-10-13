@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface ChatProps {
   image: string;
@@ -24,6 +25,8 @@ export default function ChatCard({
   id,
   current,
 }: ChatProps) {
+  console.log(lastMessage);
+  console.log(!lastMessage.seen && lastMessage.owner !== current);
   return (
     <Link
       href={`/whispers/${id}`}
@@ -40,10 +43,10 @@ export default function ChatCard({
       <div>
         <h3 className="text-small-semibold">{name}</h3>
         <p
-          className={`text-small-regular opacity-50 ${
-            !lastMessage.seen && !(lastMessage.owner === current)
+          className={`text-small-regular ${
+            !lastMessage.seen && lastMessage.owner !== current
               ? 'opacity-100'
-              : ''
+              : 'opacity-50'
           } `}
         >
           {lastMessage ? lastMessage.content : 'Start Conversation'}

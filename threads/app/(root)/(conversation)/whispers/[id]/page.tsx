@@ -1,4 +1,5 @@
 import Messages from '@/components/cards/Messages';
+import ShowMessages from '@/components/cards/ShowMessages';
 import SendMessage from '@/components/forms/SendMessage';
 import WhisperConatiner from '@/components/shared/item-lists/whispers/WhisperContainer';
 import { fetchUser, fetchWisperById } from '@/lib/actions/user.actions';
@@ -73,7 +74,7 @@ export default async function Chat({ params }: { params: { id: string } }) {
           </div>
         )}
 
-        <Messages
+        <ShowMessages
           messages={messages}
           userId={userIdString}
           chatId={params.id}

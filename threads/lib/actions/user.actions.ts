@@ -434,7 +434,34 @@ export async function addMessage(
   whisper.lastMessage = newMessage._id;
   whisper.lastUpdate = Date.now();
 
+  const lastMessage = {
+    id: newMessage._id,
+    createdAt: newMessage.createdAt,
+    content: newMessage.content,
+    seen: newMessage.seen,
+    owner: newMessage.owner,
+  };
+
+  const pusherMessage = {
+    lastMessage,
+    lastUpdate: Date.now(),
+    id: whisper._id.toString(),
+  };
+
+  pusherServer.trigger(
+    whisper.userOne._id.toString(),
+    'incoming-chat',
+    pusherMessage
+  );
+  pusherServer.trigger(
+    whisper.userTwo._id.toString(),
+    'incoming-chat',
+    pusherMessage
+  );
+
   await whisper.save();
+
+  revalidatePath(path);
 }
 
 export async function markMessageAsSeen(

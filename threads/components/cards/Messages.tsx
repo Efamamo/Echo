@@ -1,14 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Message from './Message';
 import { pusherClient } from '@/lib/pusher';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addMessage,
+  deleteMessage,
+  initializeMessages,
+  seeMessage,
+  updateMessage,
+} from '@/state/store';
 
 interface Msg {
   _id: string;
   owner: string;
-  time: any;
+  createdAt: string; // Assuming createdAt is a string
   content: string;
+  seen?: boolean; // Optional
 }
 
 export default function Messages({
@@ -20,57 +29,56 @@ export default function Messages({
   chatId: string;
   messages: Msg[];
 }) {
-  console.log(chatId);
-  const [incomingMessages, setIncomingMessages] = useState<Msg[]>(messages);
+  const dispatch = useDispatch();
+  const incomingChats = useSelector((state: any) => state.messages.chats);
 
   useEffect(() => {
+    dispatch(initializeMessages({ chatId, messages }));
+
     // Subscribe to the chat channel
     pusherClient.subscribe(chatId);
 
     // Listen for incoming messages
-    pusherClient.bind('incoming-message', (message: Msg) => {
-      setIncomingMessages((prev) => {
-        return [...prev, message];
-      });
-    });
+    const handleIncomingMessage = (message: Msg) => {
+      dispatch(addMessage({ chatId, message }));
+    };
+
+    pusherClient.bind('incoming-message', handleIncomingMessage);
 
     // Listen for message seen event
     pusherClient.bind(
       'message-seen',
       (data: { messageId: string; seen: boolean }) => {
-        setIncomingMessages((prevMessages) =>
-          prevMessages.map((msg) =>
-            msg._id === data.messageId ? { ...msg, seen: data.seen } : msg
-          )
-        );
+        dispatch(seeMessage({ chatId, messageId: data.messageId }));
       }
     );
 
-    // Listen for incoming messages
+    // Listen for delete message event
     pusherClient.bind('delete-message', (data: { messageId: string }) => {
-      setIncomingMessages(
-        (prev) => prev.filter((m) => m._id !== data.messageId) // Filter out the message with the matching _id
-      );
+      dispatch(deleteMessage({ chatId, messageId: data.messageId }));
     });
 
+    // Listen for update message event
     pusherClient.bind('update-message', (message: Msg) => {
-      setIncomingMessages((prevMessages) =>
-        prevMessages.map((m) =>
-          m._id === message._id ? { ...m, ...message } : m
-        )
-      );
+      dispatch(updateMessage({ chatId, message }));
     });
 
     // Cleanup on unmount
     return () => {
+      pusherClient.unbind('incoming-message', handleIncomingMessage);
       pusherClient.unsubscribe(chatId);
     };
-  }, [chatId]);
+  }, [chatId, dispatch, messages, incomingChats]);
 
-  // Remove duplicate messages by using a Set or filtering
+  const incomingChat = incomingChats.find(
+    (chat: any) => chat.chatId === chatId
+  );
+
   const uniqueMessages = Array.from(
-    new Set(incomingMessages.map((message) => message._id))
-  ).map((id) => incomingMessages.find((message) => message._id === id));
+    new Set(incomingChat?.messages.map((message: any) => message._id))
+  ).map((id) =>
+    incomingChat?.messages.find((message: any) => message._id === id)
+  );
 
   const sortedMessages = uniqueMessages.sort((a: any, b: any) => {
     const timeComparison =
