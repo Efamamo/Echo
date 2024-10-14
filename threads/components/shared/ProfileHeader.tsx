@@ -2,6 +2,7 @@ import Image from 'next/image';
 import TuneIn from '../forms/FollowUser';
 import Link from 'next/link';
 import TuneBack from '../forms/FollowBack';
+import { fetchWisper } from '@/lib/actions/user.actions';
 
 interface Props {
   accountUser: any;
@@ -26,6 +27,11 @@ export default async function ProfileHeader({
   const userFollowed = accountUser.followings.find((userId: any) =>
     userId.equals(currentUser._id)
   );
+  let chatLink: any;
+
+  if (userFollowed && userFollows) {
+    chatLink = await fetchWisper(currentUser, accountUser);
+  }
 
   return (
     <div className="flex flex-col justify-start w-full">
@@ -51,14 +57,16 @@ export default async function ProfileHeader({
         {!accountUser._id.equals(currentUser._id) && (
           <div className="text-light-1">
             {userFollows && userFollowed ? (
-              <Image
-                src="/assets/chat.svg"
-                alt=",essage"
-                width={24}
-                height={24}
-                className="cursor-pointer object-contain"
-                title="message"
-              />
+              <Link href={`/whispers/${chatLink?._id}`}>
+                <Image
+                  src="/assets/chat.svg"
+                  alt=",essage"
+                  width={24}
+                  height={24}
+                  className="cursor-pointer object-contain"
+                  title="message"
+                />
+              </Link>
             ) : userFollows && !userFollowed ? (
               <Image
                 src="/assets/loading.svg"

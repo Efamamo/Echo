@@ -55,7 +55,7 @@ export default function Message({
       className={`max-w-64 justify-start rounded-full  bg-dark-4 ${
         !(owner === current)
           ? 'ml-auto justify-end rounded-tr-none'
-          : 'rounded-tl-none mr-auto bg-[#1f2d4d]'
+          : 'rounded-tl-none mr-auto bg-[#243255]'
       } flex items-end gap-2 py-2 px-4  m-2 relative`}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}

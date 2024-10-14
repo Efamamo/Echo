@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
-import { sidebarLinks } from '../../constants/index';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { SignedIn, SignOutButton, useAuth } from '@clerk/nextjs';
+import { sidebarLinks } from '@/constants';
 export default function LeftSideBar() {
   const pathName = usePathname();
   const { userId } = useAuth();

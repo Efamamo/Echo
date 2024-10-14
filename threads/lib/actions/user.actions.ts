@@ -564,3 +564,23 @@ export async function fetchWisperMById(id: string) {
 
   return whisper;
 }
+
+export async function fetchWisper(uid: string, rid: string) {
+  const whisper = await Whisper.findOne({
+    $or: [
+      { userOne: uid, userTwo: rid },
+      { userOne: rid, userTwo: uid },
+    ],
+  })
+    .populate('userOne')
+    .populate('userTwo')
+    .populate({
+      path: 'messages',
+      options: { sort: { createdAt: -1, _id: -1 } }, // Secondary sort by _id to break ties
+    });
+
+  if (!whisper) {
+    throw new Error('Whisper not found');
+  }
+  return whisper;
+}
