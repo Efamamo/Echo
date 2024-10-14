@@ -399,7 +399,6 @@ export async function fetchWisperById(id: string) {
   if (!whisper) {
     throw new Error('Whisper not found');
   }
-
   return whisper;
 }
 
@@ -546,4 +545,22 @@ export async function updateMessage(
 
   await message.save();
   await whisper.save();
+}
+
+export async function fetchWisperMById(id: string) {
+  const whisper = await Whisper.findById(id)
+    .populate('userOne')
+    .populate('userTwo')
+    .populate({
+      path: 'messages',
+      options: { sort: { createdAt: -1, _id: -1 } }, // Secondary sort by _id to break ties
+    })
+    .lean(); // Convert Mongoose document to a plain JavaScript object
+
+  if (!whisper) {
+    throw new Error('Whisper not found');
+  }
+  console.log(whisper);
+
+  return whisper;
 }

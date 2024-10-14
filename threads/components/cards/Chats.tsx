@@ -4,6 +4,7 @@ import ChatCard from './ChatCard';
 import { pusherClient } from '@/lib/pusher';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  addMessage,
   initializeChats,
   seeLastMessage,
   updateLastMessge,
@@ -30,6 +31,7 @@ function Chats({ chats, userInfo }: { chats: Whisper[]; userInfo: any }) {
 
   useEffect(() => {
     dispatch(initializeChats({ chats }));
+
     pusherClient.subscribe(userInfo._id.toString());
 
     pusherClient.bind('incoming-chat', (chat: any) => {

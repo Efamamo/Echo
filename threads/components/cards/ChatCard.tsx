@@ -25,8 +25,7 @@ export default function ChatCard({
   id,
   current,
 }: ChatProps) {
-  console.log(lastMessage);
-  console.log(!lastMessage.seen && lastMessage.owner !== current);
+ 
   return (
     <Link
       href={`/whispers/${id}`}

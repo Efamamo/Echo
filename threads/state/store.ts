@@ -69,6 +69,10 @@ const messagesSlice = createSlice({
       if (!existingChat) {
         // If it doesn't exist, create a new chat entry
         state.chats.push({ chatId, messages });
+      } else {
+        state.chats = state.chats.map((chat: any) =>
+          chat.chatId === chatId ? { ...chat, messages: messages } : chat
+        );
       }
     },
 

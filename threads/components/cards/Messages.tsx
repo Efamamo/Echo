@@ -11,6 +11,21 @@ import {
   seeMessage,
   updateMessage,
 } from '@/state/store';
+import axios from 'axios'; // Use axios or fetch to call your backend API
+import { fetchWisperMById } from '@/lib/actions/user.actions';
+
+interface User {
+  _id: string;
+  // Add other properties you expect from the user
+}
+
+interface Message {
+  _id: string;
+  owner: string;
+  content: string;
+  createdAt: string;
+  seen?: boolean; // Optional
+}
 
 interface Msg {
   _id: string;
@@ -33,7 +48,27 @@ export default function Messages({
   const incomingChats = useSelector((state: any) => state.messages.chats);
 
   useEffect(() => {
-    dispatch(initializeMessages({ chatId, messages }));
+    const fetchChatMessages = async () => {
+      try {
+        const whisper: any = await fetchWisperMById(chatId);
+        console.log('Fetched whisper:', whisper);
+
+        const ms = whisper.messages.map((message: Message) => ({
+          _id: message._id.toString(),
+          owner: message.owner.toString(),
+          content: message.content,
+          createdAt: message.createdAt,
+          seen: message.seen,
+        }));
+
+        dispatch(initializeMessages({ chatId, messages: ms }));
+        console.log('Redux state after dispatch:', incomingChats);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchChatMessages();
 
     // Subscribe to the chat channel
     pusherClient.subscribe(chatId);
@@ -68,7 +103,7 @@ export default function Messages({
       pusherClient.unbind('incoming-message', handleIncomingMessage);
       pusherClient.unsubscribe(chatId);
     };
-  }, [chatId, dispatch, messages, incomingChats]);
+  }, [chatId, dispatch]); // This useEffect will re-run every time `chatId` changes, i.e., user revisits
 
   const incomingChat = incomingChats.find(
     (chat: any) => chat.chatId === chatId
