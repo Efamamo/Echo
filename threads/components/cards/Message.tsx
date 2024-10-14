@@ -56,7 +56,7 @@ export default function Message({
         !(owner === current)
           ? 'ml-auto justify-end rounded-tr-none'
           : 'rounded-tl-none mr-auto bg-[#243255]'
-      } flex items-end gap-2 py-2 px-4  m-2 relative`}
+      } flex items-end gap-2 py-2 px-4  m-2 relative z-10`}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
@@ -90,7 +90,10 @@ export default function Message({
         )}
       </div>
       {open && !isEditing && owner === current && (
-        <div className="absolute top-0 -right-24 flex flex-col p-3 gap-4 bg-dark-3 z-50">
+        <div
+          className="absolute -top-10 -right-28 flex flex-col p-3 gap-4 bg-dark-3"
+          style={{ zIndex: 100 }}
+        >
           <UpdateChat setEdit={setIsEditing} />
           <DeleteChat messageId={id} userId={current} chatId={chatId} />
         </div>

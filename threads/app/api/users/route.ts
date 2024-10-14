@@ -3,21 +3,39 @@ import { currentUser } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const url = new URL(request.url);
-  const searchString = url.searchParams.get('searchString');
+  try {
+    const url = new URL(request.url);
+    const searchString = url.searchParams.get('searchString');
 
-  const user = await currentUser();
+    const user = await currentUser();
 
-  if (!user) return;
+    if (!user) {
+      console.log('User not authenticated');
+      return NextResponse.json(
+        { error: 'User not authenticated' },
+        { status: 401 }
+      );
+    }
 
-  const userId = user.id;
+    const userId = user.id;
 
-  const result = await fetchUsers({
-    userId,
-    searchString: searchString || '',
-    pageNumber: 1,
-    pageSize: 20,
-  });
+    console.log(
+      `Fetching users for userId: ${userId} with searchString: ${searchString}`
+    );
 
-  return NextResponse.json(result);
+    const result = await fetchUsers({
+      userId,
+      searchString: searchString || '',
+      pageNumber: 1,
+      pageSize: 20,
+    });
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('Error in GET /api/users:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 }
+    );
+  }
 }

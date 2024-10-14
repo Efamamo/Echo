@@ -62,7 +62,7 @@ export default async function Chat({ params }: { params: { id: string } }) {
       </div>
 
       <div
-        className="max-h-[600px] border-b border-gray-700 overflow-y-scroll flex pb-2  flex-col-reverse"
+        className="h-[600px] border-b border-gray-700 overflow-y-scroll flex pb-2  flex-col-reverse"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',

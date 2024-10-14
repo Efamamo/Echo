@@ -106,17 +106,6 @@ export default function EchoCard({
                     originalThread={id}
                   />
                 )}
-
-                {!parentId && (
-                  <Image
-                    src="/assets/share.svg"
-                    alt="share"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                    title="share"
-                  />
-                )}
               </div>
             </div>
             <div className="flex justify-between mt-2 items-center">
